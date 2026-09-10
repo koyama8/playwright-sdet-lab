@@ -1,0 +1,26 @@
+info:
+  name: Alternar favorito do filme
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/movies/{{movieId}}/favorite"
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve marcar o filme como favorito", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.favorite).to.equal(true);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

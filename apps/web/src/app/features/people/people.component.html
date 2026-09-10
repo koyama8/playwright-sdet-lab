@@ -1,0 +1,208 @@
+<main class="page" data-testid="people-page">
+  <header class="page-title">
+    <div>
+      <p class="eyebrow">GESTÃO DE DADOS</p>
+      <h1>Pessoas</h1>
+      <p>Cadastre e gerencie as pessoas do laboratório.</p>
+    </div>
+    @if (canManage()) {
+      <button class="primary-btn" type="button" (click)="open()" data-testid="create-person">
+        ＋ Nova pessoa
+      </button>
+    }
+  </header>
+  <section class="panel data-panel">
+    <div class="toolbar">
+      <label
+        ><span class="sr-only">Buscar pessoas</span
+        ><input
+          type="search"
+          placeholder="Buscar por nome, e-mail ou função"
+          data-testid="people-search"
+          [value]="search()"
+          (input)="search.set($any($event.target).value)" /></label
+      ><select
+        aria-label="Filtrar por status"
+        data-testid="people-status-filter"
+        [value]="status()"
+        (change)="status.set($any($event.target).value)"
+      >
+        <option value="all">Todos os status</option>
+        <option value="ACTIVE">Ativos</option>
+        <option value="INACTIVE">Inativos</option>
+      </select>
+    </div>
+    @if (data.error()) {
+      <div class="data-feedback error" role="alert" data-testid="people-api-error">
+        <span>{{ data.error() }}</span>
+        <button type="button" (click)="data.refresh()" data-testid="people-retry">
+          Tentar novamente
+        </button>
+      </div>
+    } @else if (data.loading()) {
+      <p class="data-feedback" role="status" data-testid="people-loading">Carregando pessoas...</p>
+    }
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pessoa</th>
+            <th>Contato</th>
+            <th>Função</th>
+            <th>Status</th>
+            @if (canManage()) {
+              <th>Ações</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (person of filtered(); track person.id) {
+            <tr
+              [attr.data-testid]="'person-row-' + person.id"
+              [attr.data-person-email]="person.email"
+            >
+              <td>
+                <div class="person">
+                  <span>{{ initials(person.name) }}</span>
+                  <div>
+                    <strong>{{ person.name }}</strong
+                    ><small>Cadastrado em {{ person.createdAt | date: 'dd/MM/yyyy' }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <strong>{{ person.email }}</strong
+                ><small>{{ person.phone }}</small>
+              </td>
+              <td>{{ person.role }}</td>
+              <td>
+                <span class="badge" [class.inactive]="person.status === 'INACTIVE'"
+                  >● {{ person.status === 'ACTIVE' ? 'Ativo' : 'Inativo' }}</span
+                >
+              </td>
+              @if (canManage()) {
+                <td>
+                  <div class="row-actions">
+                    <button
+                      type="button"
+                      (click)="open(person)"
+                      [attr.aria-label]="'Editar ' + person.name"
+                      [attr.data-testid]="'edit-person-' + person.id"
+                    >
+                      Editar</button
+                    ><button
+                      class="delete"
+                      type="button"
+                      (click)="remove(person)"
+                      [attr.aria-label]="'Excluir ' + person.name"
+                      [attr.data-testid]="'delete-person-' + person.id"
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td [attr.colspan]="canManage() ? 5 : 4" class="empty">Nenhuma pessoa encontrada.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  @if (modalOpen()) {
+    <div class="modal-backdrop" (click)="close()">
+      <section
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="person-modal-title"
+        data-testid="person-dialog"
+        (click)="$event.stopPropagation()"
+        (keydown.escape)="close()"
+      >
+        <header>
+          <div>
+            <p class="eyebrow">{{ editingId() ? 'EDIÇÃO' : 'NOVO CADASTRO' }}</p>
+            <h2 id="person-modal-title">{{ editingId() ? 'Editar pessoa' : 'Nova pessoa' }}</h2>
+          </div>
+          <button
+            type="button"
+            (click)="close()"
+            aria-label="Fechar"
+            data-testid="close-person-dialog"
+          >
+            ×
+          </button>
+        </header>
+        <form [formGroup]="form" (ngSubmit)="save()" data-testid="person-form">
+          <div class="form-grid">
+            <label class="full"
+              >Nome completo<input
+                formControlName="name"
+                placeholder="Ex: Maria Silva"
+                data-testid="person-name"
+                autofocus
+              />
+              @if (form.controls.name.touched && form.controls.name.invalid) {
+                <small>Informe pelo menos 3 caracteres.</small>
+              }</label
+            ><label class="full"
+              >E-mail<input
+                formControlName="email"
+                type="email"
+                placeholder="maria@email.com"
+                data-testid="person-email"
+              />
+              @if (form.controls.email.touched && form.controls.email.invalid) {
+                <small>Informe um e-mail válido.</small>
+              }</label
+            ><label
+              >Telefone<input
+                formControlName="phone"
+                placeholder="(11) 99999-0000"
+                data-testid="person-phone"
+              />
+              @if (form.controls.phone.touched && form.controls.phone.invalid) {
+                <small data-testid="person-phone-error">Informe pelo menos 8 caracteres.</small>
+              }</label
+            ><label
+              >Função<select formControlName="role" data-testid="person-role">
+                <option>QA Engineer</option>
+                <option>SDET</option>
+                <option>Developer</option>
+                <option>Product Owner</option>
+                <option>UX Designer</option>
+              </select></label
+            ><label class="full"
+              >Status<select formControlName="status" data-testid="person-status">
+                <option value="ACTIVE">Ativo</option>
+                <option value="INACTIVE">Inativo</option>
+              </select></label
+            >
+          </div>
+          <p class="form-error" role="alert" data-testid="person-form-error">{{ message() }}</p>
+          <footer>
+            <button
+              class="secondary-btn"
+              type="button"
+              (click)="close()"
+              data-testid="cancel-person"
+            >
+              Cancelar</button
+            ><button
+              class="primary-btn"
+              type="submit"
+              data-testid="save-person"
+              [disabled]="saving()"
+            >
+              {{ saving() ? 'Salvando...' : 'Salvar pessoa' }}
+            </button>
+          </footer>
+        </form>
+      </section>
+    </div>
+  }
+</main>

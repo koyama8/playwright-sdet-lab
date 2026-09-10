@@ -1,0 +1,27 @@
+info:
+  name: Listar filmes favoritos
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/movies?favorite=true&page=1&pageSize=20"
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve listar apenas favoritos", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.items).to.be.an("array");
+          expect(res.getBody().data.items.every((movie) => movie.favorite === true)).to.equal(true);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

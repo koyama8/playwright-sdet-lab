@@ -1,0 +1,25 @@
+{
+  "name": "playwright-lab-web-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "web:dev": "npm --prefix apps/web start -- --port 3100",
+    "api:dev": "npm --prefix apps/api run dev",
+    "api:build": "npm --prefix apps/api run build",
+    "api:typecheck": "npm --prefix apps/api run typecheck",
+    "api:generate": "npm --prefix apps/api run prisma:generate",
+    "api:migrate": "npm --prefix apps/api run prisma:migrate",
+    "api:seed": "npm --prefix apps/api run prisma:seed",
+    "api:reset": "npm --prefix apps/api run prisma:reset-demo",
+    "api:smoke": "node scripts/api-smoke.mjs",
+    "web:build": "npm --prefix apps/web run build",
+    "web:test": "npm --prefix apps/web test -- --watch=false",
+    "verify": "npm run api:typecheck && npm run api:build && npm run web:build && npm run api:smoke",
+    "web": "npm run web:dev",
+    "web:detached": "npm run web:dev",
+    "web:stop": "docker compose down",
+    "stack:up": "docker compose up -d",
+    "stack:down": "docker compose down",
+    "stack:status": "docker compose ps"
+  }
+}

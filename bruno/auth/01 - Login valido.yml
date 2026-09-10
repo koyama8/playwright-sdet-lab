@@ -1,0 +1,44 @@
+info:
+  name: Login válido
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/auth/login"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "{{email}}",
+        "password": "{{password}}"
+      }
+  auth: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if (res.getStatus() === 200) {
+          bru.setVar("accessToken", body.data.accessToken);
+          bru.setVar("refreshToken", body.data.refreshToken);
+        }
+    - type: tests
+      code: |-
+        test("deve autenticar o administrador", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.accessToken).to.be.a("string");
+          expect(res.getBody().data.refreshToken).to.be.a("string");
+          expect(res.getBody().data.user.role).to.equal("ADMIN");
+          expect(res.getBody().data.expiresIn).to.equal(900);
+          expect(res.getBody().data.session.idleTimeoutSeconds).to.equal(120);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: Autentica qa@adminlab.com e salva accessToken e refreshToken para as próximas chamadas.

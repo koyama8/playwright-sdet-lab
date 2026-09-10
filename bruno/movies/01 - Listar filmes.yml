@@ -1,0 +1,27 @@
+info:
+  name: Listar filmes
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/movies?page=1&pageSize=20"
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve listar filmes com paginação", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.items).to.be.an("array");
+          expect(res.getBody().data.pagination.page).to.equal(1);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

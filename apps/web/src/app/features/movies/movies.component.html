@@ -1,0 +1,239 @@
+<main class="page" data-testid="movies-page">
+  <header class="page-title">
+    <div>
+      <p class="eyebrow coral-label">CATÁLOGO</p>
+      <h1>Filmes</h1>
+      <p>Organize filmes, avaliações e favoritos.</p>
+    </div>
+    @if (canManage()) {
+      <button
+        class="primary-btn coral-btn"
+        type="button"
+        (click)="open()"
+        data-testid="create-movie"
+      >
+        ＋ Novo filme
+      </button>
+    }
+  </header>
+  <section class="panel data-panel">
+    <div class="toolbar">
+      <label
+        ><span class="sr-only">Buscar filmes</span
+        ><input
+          type="search"
+          placeholder="Buscar por título ou gênero"
+          data-testid="movies-search"
+          [value]="search()"
+          (input)="search.set($any($event.target).value)" /></label
+      ><select
+        aria-label="Filtrar por gênero"
+        data-testid="movies-genre-filter"
+        [value]="genre()"
+        (change)="genre.set($any($event.target).value)"
+      >
+        <option value="all">Todos os gêneros</option>
+        @for (item of genres(); track item) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </div>
+    @if (data.error()) {
+      <div class="data-feedback error" role="alert" data-testid="movies-api-error">
+        <span>{{ data.error() }}</span>
+        <button type="button" (click)="data.refresh()" data-testid="movies-retry">
+          Tentar novamente
+        </button>
+      </div>
+    } @else if (data.loading()) {
+      <p class="data-feedback" role="status" data-testid="movies-loading">Carregando filmes...</p>
+    }
+    <div class="movie-grid">
+      @for (movie of filtered(); track movie.id; let index = $index) {
+        <article
+          class="movie-card"
+          [attr.data-testid]="'movie-card-' + movie.id"
+          [attr.data-movie-title]="movie.title"
+        >
+          <div class="poster" [style.--poster-index]="index">
+            @if (movie.imageUrl) {
+              <img [src]="movie.imageUrl" [alt]="'Capa de ' + movie.title" />
+            } @else {
+              <span>{{ initials(movie.title) }}</span>
+            }
+            <button
+              type="button"
+              [class.active]="movie.favorite"
+              (click)="toggleFavorite(movie)"
+              [attr.aria-pressed]="movie.favorite"
+              [attr.aria-label]="(movie.favorite ? 'Desfavoritar ' : 'Favoritar ') + movie.title"
+              [attr.data-testid]="'favorite-movie-' + movie.id"
+            >
+              ♥
+            </button>
+          </div>
+          <div class="movie-body">
+            <div class="movie-title">
+              <h2>{{ movie.title }}</h2>
+              <span>★ {{ movie.rating }}</span>
+            </div>
+            <p>{{ movie.year }} · {{ movie.genre }}</p>
+            <small>{{ movie.synopsis }}</small>
+            @if (canManage()) {
+              <div class="row-actions">
+                <button
+                  type="button"
+                  (click)="open(movie)"
+                  [attr.data-testid]="'edit-movie-' + movie.id"
+                >
+                  Editar</button
+                ><button
+                  class="delete"
+                  type="button"
+                  (click)="remove(movie)"
+                  [attr.data-testid]="'delete-movie-' + movie.id"
+                >
+                  Excluir
+                </button>
+              </div>
+            }
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">Nenhum filme encontrado.</p>
+      }
+    </div>
+  </section>
+  @if (modalOpen()) {
+    <div class="modal-backdrop" (click)="close()">
+      <section
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="movie-modal-title"
+        data-testid="movie-dialog"
+        (click)="$event.stopPropagation()"
+        (keydown.escape)="close()"
+      >
+        <header>
+          <div>
+            <p class="eyebrow coral-label">{{ editingId() ? 'EDIÇÃO' : 'NOVO FILME' }}</p>
+            <h2 id="movie-modal-title">{{ editingId() ? 'Editar filme' : 'Novo filme' }}</h2>
+          </div>
+          <button
+            type="button"
+            (click)="close()"
+            aria-label="Fechar"
+            data-testid="close-movie-dialog"
+          >
+            ×
+          </button>
+        </header>
+        <form [formGroup]="form" (ngSubmit)="save()" data-testid="movie-form">
+          <div class="form-grid">
+            <label class="full image-upload-label">
+              Imagem de capa
+              <span class="image-upload">
+                <span class="image-preview">
+                  @if (imagePreview()) {
+                    <img [src]="imagePreview()" alt="Pré-visualização da capa" />
+                  } @else {
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Zm2 11.7 3.3-3.3 2.2 2.2 3.3-4.1 3.2 4v2H6v-.8ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"
+                      />
+                    </svg>
+                  }
+                </span>
+                <span
+                  ><strong>Escolher imagem</strong
+                  ><small>JPG, PNG ou WebP · máximo 1,5 MB</small></span
+                >
+              </span>
+              <input
+                class="file-input"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                (change)="onImageSelected($event)"
+                data-testid="movie-image"
+              />
+            </label>
+            <label class="full"
+              >Título<input
+                formControlName="title"
+                placeholder="Nome do filme"
+                data-testid="movie-title"
+                autofocus
+              />
+              @if (form.controls.title.touched && form.controls.title.invalid) {
+                <small data-testid="movie-title-error">Informe pelo menos 2 caracteres.</small>
+              }</label
+            ><label
+              >Gênero<select formControlName="genre" data-testid="movie-genre">
+                <option>Drama</option>
+                <option>Ação</option>
+                <option>Comédia</option>
+                <option>Fantasia</option>
+                <option>Ficção científica</option>
+                <option>Terror</option>
+              </select></label
+            ><label
+              >Ano<input
+                formControlName="year"
+                type="number"
+                min="1888"
+                max="2100"
+                data-testid="movie-year"
+              />
+              @if (form.controls.year.touched && form.controls.year.invalid) {
+                <small data-testid="movie-year-error">Informe um ano entre 1888 e 2100.</small>
+              }</label
+            ><label
+              >Avaliação<input
+                formControlName="rating"
+                type="number"
+                min="0"
+                max="10"
+                step="0.1"
+                data-testid="movie-rating"
+              />
+              @if (form.controls.rating.touched && form.controls.rating.invalid) {
+                <small data-testid="movie-rating-error">Informe uma avaliação entre 0 e 10.</small>
+              }</label
+            ><label class="check-control"
+              ><input formControlName="favorite" type="checkbox" data-testid="movie-favorite" />
+              Filme favorito</label
+            ><label class="full"
+              >Sinopse<textarea
+                formControlName="synopsis"
+                placeholder="Resumo do filme"
+                data-testid="movie-synopsis"
+              ></textarea>
+              @if (form.controls.synopsis.touched && form.controls.synopsis.invalid) {
+                <small data-testid="movie-synopsis-error">Informe pelo menos 10 caracteres.</small>
+              }
+            </label>
+          </div>
+          <p class="form-error" role="alert" data-testid="movie-form-error">{{ message() }}</p>
+          <footer>
+            <button
+              class="secondary-btn"
+              type="button"
+              (click)="close()"
+              data-testid="cancel-movie"
+            >
+              Cancelar</button
+            ><button
+              class="primary-btn coral-btn"
+              type="submit"
+              data-testid="save-movie"
+              [disabled]="saving()"
+            >
+              {{ saving() ? 'Salvando...' : 'Salvar filme' }}
+            </button>
+          </footer>
+        </form>
+      </section>
+    </div>
+  }
+</main>

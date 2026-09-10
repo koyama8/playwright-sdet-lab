@@ -1,0 +1,38 @@
+info:
+  name: Renovar token
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/auth/refresh"
+  body:
+    type: json
+    data: |-
+      {
+        "refreshToken": "{{refreshToken}}"
+      }
+  auth: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if (res.getStatus() === 200) {
+          bru.setVar("accessToken", body.data.accessToken);
+          bru.setVar("refreshToken", body.data.refreshToken);
+        }
+    - type: tests
+      code: |-
+        test("deve rotacionar os tokens", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.accessToken).to.be.a("string");
+          expect(res.getBody().data.refreshToken).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

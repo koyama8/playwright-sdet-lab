@@ -1,0 +1,28 @@
+info:
+  name: Health da API
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/health"
+  auth: none
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("API deve estar disponível", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().status).to.equal("ok");
+          expect(res.getBody().service).to.equal("playwright-lab-api");
+          expect(res.getBody().database).to.equal("ok");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: Confirma que a API está respondendo na porta 3030.

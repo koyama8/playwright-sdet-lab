@@ -1,0 +1,45 @@
+info:
+  name: Criar filme
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/movies"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Filme Playwright {{$timestamp}}",
+        "imageUrl": "https://images.example.test/playwright-poster.jpg",
+        "genre": "Ficção científica",
+        "year": 2026,
+        "rating": 8.7,
+        "favorite": false,
+        "synopsis": "Filme criado pelo Bruno para validar o fluxo completo da API."
+      }
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if (res.getStatus() === 201) {
+          bru.setVar("movieId", body.data.id);
+        }
+    - type: tests
+      code: |-
+        test("deve criar um filme", () => {
+          expect(res.getStatus()).to.equal(201);
+          expect(res.getBody().data.id).to.be.a("string");
+          expect(res.getBody().data.favorite).to.equal(false);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

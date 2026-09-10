@@ -1,0 +1,27 @@
+info:
+  name: Bloquear token inválido
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/auth/me"
+  auth:
+    type: bearer
+    token: token-invalido-para-estudo
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve retornar 401 para token inválido ou expirado", () => {
+          expect(res.getStatus()).to.equal(401);
+          expect(res.getBody().error.message).to.equal("Invalid or expired access token");
+          expect(res.getBody().error.requestId).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,37 @@
+info:
+  name: Rejeitar filme com payload inválido
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/movies"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "X",
+        "genre": "D",
+        "year": 1700,
+        "rating": 15,
+        "synopsis": "curta"
+      }
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve retornar 400 e detalhes do contrato", () => {
+          expect(res.getStatus()).to.equal(400);
+          expect(res.getBody().error.code).to.equal("VALIDATION_ERROR");
+          expect(res.getBody().error.details).to.be.an("array");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

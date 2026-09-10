@@ -1,0 +1,30 @@
+info:
+  name: Bloquear refresh token inválido
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/auth/refresh"
+  body:
+    type: json
+    data: |-
+      {
+        "refreshToken": "refresh-token-invalido-para-estudo"
+      }
+  auth: none
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve rejeitar refresh token desconhecido", () => {
+          expect(res.getStatus()).to.equal(401);
+          expect(res.getBody().error.message).to.equal("Invalid or expired refresh token");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,89 @@
+<main class="login-shell" data-testid="login-page">
+  <section class="login-art" aria-label="Mascote do Playwright Lab">
+    <img src="/playwright-robot.png" alt="Robô mascote do Playwright Lab" />
+  </section>
+  <section class="login-form-panel">
+    <form
+      class="login-card"
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      novalidate
+      data-testid="login-form"
+    >
+      <p class="eyebrow">AMBIENTE LOCAL</p>
+      <h2>Acesse sua conta</h2>
+      <p class="muted">Entre para gerenciar seu laboratório.</p>
+      <label for="email">E-mail</label
+      ><input
+        id="email"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        placeholder="qa@adminlab.com"
+        data-testid="login-email"
+      />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <small class="field-error" data-testid="login-email-error">Informe um e-mail válido.</small>
+      }
+      <label for="password">Senha</label>
+      <div class="password-input">
+        <input
+          id="password"
+          [type]="passwordVisible() ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Digite sua senha"
+          data-testid="login-password"
+        /><button
+          type="button"
+          (click)="passwordVisible.set(!passwordVisible())"
+          [attr.aria-label]="passwordVisible() ? 'Ocultar senha' : 'Mostrar senha'"
+          data-testid="login-password-toggle"
+        >
+          ◉
+        </button>
+      </div>
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <small class="field-error" data-testid="login-password-error">Informe sua senha.</small>
+      }
+      <label class="check-line"
+        ><input type="checkbox" formControlName="remember" data-testid="login-remember" /> Manter
+        conectado</label
+      >
+      <p class="form-error" role="alert" data-testid="login-error">{{ error() }}</p>
+      <button
+        class="primary-btn full"
+        type="submit"
+        data-testid="login-submit"
+        [disabled]="submitting()"
+      >
+        {{ submitting() ? 'Entrando...' : 'Entrar' }}
+      </button>
+      <div class="credentials">
+        <span>Usuário de demonstração</span><strong>qa@adminlab.com</strong><code>pwd123</code>
+      </div>
+    </form>
+  </section>
+  @if (notice()) {
+    <aside
+      class="session-notice"
+      role="alert"
+      aria-live="assertive"
+      data-testid="session-expired-message"
+    >
+      <span class="session-notice-icon" aria-hidden="true">!</span>
+      <span class="session-notice-content">
+        <strong>Sessão expirada</strong>
+        <span>{{ notice() }}</span>
+      </span>
+      <button
+        type="button"
+        (click)="dismissNotice()"
+        aria-label="Fechar notificação"
+        data-testid="session-expired-close"
+      >
+        ×
+      </button>
+    </aside>
+  }
+</main>

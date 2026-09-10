@@ -1,0 +1,43 @@
+info:
+  name: Criar pessoa
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/people"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Pessoa Playwright",
+        "email": "pessoa.playwright.{{$timestamp}}@example.test",
+        "phone": "+55 11 99999-0000",
+        "role": "QA Automation Engineer",
+        "status": "ACTIVE"
+      }
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if (res.getStatus() === 201) {
+          bru.setVar("personId", body.data.id);
+        }
+    - type: tests
+      code: |-
+        test("deve criar uma pessoa", () => {
+          expect(res.getStatus()).to.equal(201);
+          expect(res.getBody().data.id).to.be.a("string");
+          expect(res.getBody().data.status).to.equal("ACTIVE");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

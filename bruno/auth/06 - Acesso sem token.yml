@@ -1,0 +1,25 @@
+info:
+  name: Bloquear acesso sem token
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/auth/me"
+  auth: none
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve retornar 401 sem Bearer token", () => {
+          expect(res.getStatus()).to.equal(401);
+          expect(res.getBody().error.message).to.equal("Bearer token is required");
+          expect(res.getBody().error.requestId).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

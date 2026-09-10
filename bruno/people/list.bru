@@ -1,0 +1,15 @@
+meta {
+  name: List people
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/people?page=1&pageSize=20
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum RecordStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id           String         @id @default(uuid()) @db.Uuid
+  email        String         @unique
+  passwordHash String
+  name         String
+  role         UserRole       @default(USER)
+  active       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  people       Person[]
+  movies       Movie[]
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  tokenHash String    @unique
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, revokedAt])
+}
+
+model Person {
+  id        String       @id @default(uuid()) @db.Uuid
+  name      String
+  email     String       @unique
+  phone     String
+  role      String
+  status    RecordStatus @default(ACTIVE)
+  createdById String?    @db.Uuid
+  createdBy User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([name])
+  @@index([status])
+}
+
+model Movie {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String   @unique
+  imageUrl    String?
+  genre       String
+  year        Int
+  rating      Decimal  @db.Decimal(3, 1)
+  favorite    Boolean  @default(false)
+  synopsis    String
+  createdById String?  @db.Uuid
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([genre])
+  @@index([favorite])
+}

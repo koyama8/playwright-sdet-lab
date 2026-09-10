@@ -1,0 +1,15 @@
+meta {
+  name: List movies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/movies?page=1&pageSize=20
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

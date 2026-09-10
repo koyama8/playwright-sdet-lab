@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Playwright Lab PostgreSQL",
+      "Group": "Playwright Lab",
+      "Host": "postgres.playwright.test",
+      "Port": 5432,
+      "MaintenanceDB": "playwright_lab",
+      "Username": "qa_user",
+      "SSLMode": "prefer",
+      "Comment": "Banco PostgreSQL do laboratório de automação"
+    }
+  }
+}

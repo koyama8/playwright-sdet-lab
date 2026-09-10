@@ -1,0 +1,37 @@
+info:
+  name: Rejeitar pessoa com payload inválido
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/people"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "A",
+        "email": "email-invalido",
+        "phone": "1",
+        "role": "Q"
+      }
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve retornar detalhes da validação", () => {
+          expect(res.getStatus()).to.equal(400);
+          expect(res.getBody().error.code).to.equal("VALIDATION_ERROR");
+          expect(res.getBody().error.details).to.be.an("array");
+          expect(res.getBody().error.requestId).to.be.a("string");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

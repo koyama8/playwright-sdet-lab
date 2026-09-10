@@ -1,0 +1,28 @@
+meta {
+  name: Create person
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/people
+  body: json
+  auth: bearer
+}
+
+headers {
+  content-type: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Pessoa de teste",
+    "email": "pessoa.teste@example.test",
+    "phone": "+55 11 99999-0000",
+    "role": "QA Engineer"
+  }
+}

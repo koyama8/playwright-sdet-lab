@@ -1,0 +1,21 @@
+opencollection: 1.0.0
+
+info:
+  name: Playwright Lab API
+
+request:
+  variables:
+    - name: baseUrl
+      value: http://localhost:3030
+    - name: email
+      value: qa@adminlab.com
+    - name: password
+      value: pwd123
+    - name: accessToken
+      value: ""
+    - name: refreshToken
+      value: ""
+    - name: personId
+      value: ""
+    - name: movieId
+      value: ""

@@ -1,0 +1,34 @@
+info:
+  name: Atualizar filme criado
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/movies/{{movieId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "genre": "Aventura",
+        "rating": 9.1,
+        "synopsis": "Filme atualizado pelo Bruno para validar o endpoint PATCH da API."
+      }
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve atualizar o filme", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.genre).to.equal("Aventura");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,28 @@
+info:
+  name: Informações da API
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api"
+  auth: none
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("deve documentar autenticação e recursos", () => {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody().data.name).to.equal("Playwright Lab API");
+          expect(res.getBody().data.authentication.idleTimeoutSeconds).to.equal(120);
+          expect(res.getBody().data.resources).to.be.an("array");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5
+
+docs: Exibe versão, política de autenticação, expiração e recursos disponíveis.
