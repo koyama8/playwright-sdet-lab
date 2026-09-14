@@ -1,11 +1,16 @@
 import { defineConfig, devices } from '@playwright/test';
+import { defineBddConfig } from 'playwright-bdd';
 
 const baseURL = process.env.WEB_BASE_URL ?? 'http://localhost:3100';
 const requestedSlowMo = Number.parseInt(process.env.PW_SLOW_MO ?? '0', 10);
 const slowMo = Number.isFinite(requestedSlowMo) ? requestedSlowMo : 0;
+const bddTestDir = defineBddConfig({
+  features: ['tests/web/features/**/*.feature', 'tests/api/features/**/*.feature'],
+  steps: ['tests/web/steps/**/*.ts', 'tests/api/steps/**/*.ts'],
+  outputDir: '.features-gen',
+});
 
 export default defineConfig({
-  testDir: './tests',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
@@ -23,7 +28,13 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chromium',
+      name: 'bdd-chromium',
+      testDir: bddTestDir,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'smoke-chromium',
+      testDir: './tests/smoke',
       use: { ...devices['Desktop Chrome'] },
     },
   ],

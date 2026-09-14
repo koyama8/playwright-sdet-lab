@@ -18,6 +18,11 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
+    "bdd:generate": "bddgen test",
+    "pretest:bdd": "npm run bdd:generate",
+    "test:bdd": "playwright test --project=bdd-chromium",
+    "pretest:bdd:headed": "npm run bdd:generate",
+    "test:bdd:headed": "playwright test --project=bdd-chromium --headed",
     "test:smoke": "playwright test tests/smoke",
     "test:smoke:headed": "playwright test tests/smoke --headed",
     "verify": "npm run api:typecheck && npm run api:build && npm run web:build && npm run api:smoke",
@@ -30,6 +35,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
+    "playwright-bdd": "^9.2.1",
     "typescript": "^7.0.2"
   }
 }
