@@ -33,7 +33,7 @@ export class LoginComponent implements OnDestroy {
     const expiredFromUrl = route.snapshot.queryParamMap.get('reason') === 'session-expired';
     this.notice.set(
       storedReason ||
-        (expiredFromUrl ? 'Você ficou 2 minutos sem atividade. Entre novamente.' : ''),
+        (expiredFromUrl ? 'Você ficou 10 minutos sem atividade. Entre novamente.' : ''),
     );
     if (this.notice()) {
       this.noticeTimer = setTimeout(() => this.dismissNotice(), 15_000);

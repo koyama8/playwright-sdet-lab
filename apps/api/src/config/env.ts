@@ -9,7 +9,7 @@ const schema = z.object({
   JWT_REFRESH_SECRET: z.string().min(32),
   ACCESS_TOKEN_TTL_SECONDS: z.coerce.number().int().min(60).default(900),
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(7),
-  SESSION_IDLE_TIMEOUT_SECONDS: z.coerce.number().int().min(60).default(120),
+  SESSION_IDLE_TIMEOUT_SECONDS: z.coerce.number().int().min(60).default(600),
   WEB_ORIGIN: z.string().default('http://localhost:3100'),
   UPLOAD_DIR: z.string().default('uploads'),
 });

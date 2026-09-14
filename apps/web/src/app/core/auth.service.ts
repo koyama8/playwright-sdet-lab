@@ -127,7 +127,7 @@ export class AuthService implements OnDestroy {
     const reason = sessionStorage.getItem(LOGOUT_REASON_KEY);
     sessionStorage.removeItem(LOGOUT_REASON_KEY);
     return reason === 'session-expired'
-      ? 'Você ficou 2 minutos sem atividade. Entre novamente.'
+      ? 'Você ficou 10 minutos sem atividade. Entre novamente.'
       : '';
   }
 

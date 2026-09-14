@@ -28,7 +28,7 @@ O seed cria o administrador local `qa@adminlab.com` com senha `pwd123`. Essas cr
 
 `POST /api/auth/login` retorna um access token JWT curto e um refresh token opaco. Use o access token como `Authorization: Bearer <token>`.
 
-A resposta também informa a política usada pelo Web: access token de 900 segundos, refresh token de 7 dias e encerramento da sessão após 120 segundos sem interação. O Web renova o access token quando necessário, mas não renova uma sessão inativa.
+A resposta também informa a política usada pelo Web: access token de 900 segundos, refresh token de 7 dias e encerramento da sessão após 600 segundos (10 minutos) sem interação. O Web renova o access token quando necessário, mas não renova uma sessão inativa.
 
 - `POST /api/auth/refresh` faz rotação do refresh token;
 - `POST /api/auth/logout` revoga o refresh token;

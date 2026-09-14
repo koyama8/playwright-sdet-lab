@@ -6,8 +6,15 @@ const requestedSlowMo = Number.parseInt(process.env.PW_SLOW_MO ?? '0', 10);
 const slowMo = Number.isFinite(requestedSlowMo) ? requestedSlowMo : 0;
 const bddTestDir = defineBddConfig({
   features: ['tests/web/features/**/*.feature', 'tests/api/features/**/*.feature'],
-  steps: ['tests/web/steps/**/*.ts', 'tests/api/steps/**/*.ts'],
+  steps: [
+    'tests/web/steps/**/*.ts',
+    'tests/web/fixtures/**/*.ts',
+    'tests/api/steps/**/*.ts',
+    'tests/api/fixtures/**/*.ts',
+    'tests/shared/fixtures/**/*.ts',
+  ],
   outputDir: '.features-gen',
+  missingSteps: 'fail-on-run',
 });
 
 export default defineConfig({

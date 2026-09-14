@@ -1,5 +1,10 @@
 # Playwright SDET Lab
 
+[![Playwright](https://img.shields.io/badge/Playwright-1.63-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Tipado-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![BDD](https://img.shields.io/badge/BDD-Playwright--BDD-23D96C)](https://vitalets.github.io/playwright-bdd/)
+![Autenticação Web](https://img.shields.io/badge/Autentica%C3%A7%C3%A3o%20Web-3%20CTs%20conclu%C3%ADdos-success)
+
 Laboratório de Engenharia de Qualidade com uma aplicação Web, uma API REST e uma arquitetura de automação baseada em Playwright e TypeScript.
 
 O projeto simula um ambiente próximo ao encontrado em times reais: autenticação, sessão, perfis de acesso, CRUD de pessoas e filmes, filtros, paginação, upload, persistência em banco de dados e endpoints próprios para preparação de testes.
@@ -31,10 +36,22 @@ Construir uma suíte profissional de testes Web e API, aplicando práticas de Qu
 | Smoke de autenticação | Concluído |
 | Estrutura de pastas da automação | Concluída |
 | Integração Playwright BDD | Concluída |
-| Autenticação Web em BDD | Em desenvolvimento |
-| Page Objects, fixtures e API Clients | Em desenvolvimento progressivo |
+| Autenticação Web em BDD | Concluída: 3 cenários |
+| Page Object, fixture e massas da autenticação Web | Concluídos |
+| Automação da autenticação da API | Próxima etapa |
+| Pessoas e Filmes Web/API | Planejados |
 
-Atualmente existe um smoke técnico e a primeira feature BDD de autenticação Web. Os demais arquivos apresentados na arquitetura abaixo representam a estrutura-alvo e serão implementados progressivamente.
+Atualmente existem um smoke técnico e três cenários BDD de autenticação Web concluídos. A base Web já integra Feature, Steps, Fixture, Page Object e massas tipadas. Os arquivos de Pessoas, Filmes e da automação da API apresentados abaixo representam a evolução planejada.
+
+## Cobertura de autenticação Web
+
+| ID | Cenário | Tags principais | Estado |
+| --- | --- | --- | --- |
+| `CT-WEB-AUTH-001` | Login com credenciais válidas | `@smoke` `@positive` | Concluído |
+| `CT-WEB-AUTH-002` | Login com credenciais inválidas | `@negative` | Concluído |
+| `CT-WEB-AUTH-003` | Expiração após 10 minutos de inatividade | `@session` `@negative` | Concluído |
+
+O cenário de expiração utiliza o relógio virtual do Playwright para avançar os 10 minutos de forma determinística, sem adicionar espera fixa à execução.
 
 ## Stack
 
@@ -59,6 +76,8 @@ Atualmente existe um smoke técnico e a primeira feature BDD de autenticação W
 
 ## Arquitetura
 
+A árvore apresenta os arquivos implementados na autenticação Web e a estrutura-alvo reservada para os próximos domínios.
+
 ```text
 playwright-sdet-lab/
 |
@@ -78,8 +97,7 @@ playwright-sdet-lab/
 |   |   |   |-- people.steps.ts
 |   |   |   `-- movies.steps.ts
 |   |   |-- pages/                         # Page Objects
-|   |   |   |-- login.page.ts
-|   |   |   |-- dashboard.page.ts
+|   |   |   |-- authentication.page.ts
 |   |   |   |-- people.page.ts
 |   |   |   `-- movies.page.ts
 |   |   |-- components/                    # Component Objects
@@ -138,10 +156,9 @@ playwright-sdet-lab/
 |-- infra/                                 # Configuração do pgAdmin
 |-- scripts/                               # Utilitários do projeto
 |-- playwright.config.ts                   # Configuração do Playwright
-|-- tsconfig.tests.json                    # Planejado para a automação
+|-- tsconfig.json                          # TypeScript da automação
 |-- package.json
 |-- package-lock.json
-|-- .env.example                           # Planejado para a automação
 |-- .gitignore
 `-- README.md
 ```
@@ -192,7 +209,7 @@ Cada cenário deverá receber página, contexto, clientes e estado próprios. Da
 
 ### Dados determinísticos
 
-Factories criarão massas únicas para permitir repetição e paralelismo. O endpoint de suporte restaurará somente o ambiente local de testes.
+As credenciais de demonstração ficam em uma massa Web tipada e reutilizável. Nos cenários de Pessoas e Filmes, factories criarão massas únicas para permitir repetição e paralelismo. O endpoint de suporte restaura somente o ambiente local de testes.
 
 ### Sincronização confiável
 
@@ -266,7 +283,7 @@ Senha:  pwd123
 
 ## Execução dos testes
 
-O smoke de autenticação exige PostgreSQL e API ativos.
+O smoke e os cenários BDD Web exigem PostgreSQL, API e aplicação Web ativos.
 
 ```powershell
 npm run test:smoke
@@ -304,6 +321,34 @@ Execução BDD com navegador visível:
 npm run test:bdd:headed
 ```
 
+Execução somente da autenticação Web:
+
+```powershell
+npm run bdd:generate
+npx playwright test --project=bdd-chromium --grep "@authentication"
+```
+
+Execução de um caso de teste específico:
+
+```powershell
+npm run bdd:generate
+npx playwright test --project=bdd-chromium --grep "@CT_WEB_AUTH_001"
+```
+
+Interface interativa somente com os cenários Web:
+
+```powershell
+npm run test:web:ui
+```
+
+Interface interativa somente com os cenários de API:
+
+```powershell
+npm run test:api:ui
+```
+
+Os comandos de UI geram novamente os testes BDD antes de abrir o Playwright. O filtro `@web` mantém apenas as features Web e o filtro `@api` mantém apenas as features da API.
+
 Outros comandos:
 
 | Comando | Finalidade |
@@ -314,22 +359,18 @@ Outros comandos:
 | `npm run bdd:generate` | Gerar os testes Playwright a partir das features |
 | `npm run test:bdd` | Gerar e executar a suíte BDD |
 | `npm run test:bdd:headed` | Gerar e executar a suíte BDD com navegador visível |
+| `npm run test:web:ui` | Abrir no Playwright UI somente os cenários com `@web` |
+| `npm run test:api:ui` | Abrir no Playwright UI somente os cenários com `@api` |
 | `npm run web:test` | Executar testes unitários Angular |
 | `npm run api:typecheck` | Validar os tipos da API |
 | `npm run api:build` | Compilar a API |
 | `npm run web:build` | Compilar a aplicação Web |
 | `npm run api:smoke` | Verificar os fluxos principais da API |
 
-## Documentação complementar
-
-- [Arquitetura Playwright + BDD](docs/PLAYWRIGHT-BDD-ARCHITECTURE.md)
-- [Análise de prontidão do projeto](docs/PROJECT-READINESS-REVIEW.md)
-- [Estratégia de dados de teste](docs/TEST-DATA.md)
-
 ## Próximas etapas
 
-1. Implementar os Page Objects e steps da autenticação Web.
-2. Implementar os cenários de autenticação da API.
-3. Implementar os fluxos Web e API de Pessoas.
-4. Implementar os fluxos Web e API de Filmes.
-5. Habilitar execução paralela após validar isolamento das massas.
+1. Implementar os cenários de autenticação da API.
+2. Implementar os fluxos Web e API de Pessoas.
+3. Implementar os fluxos Web e API de Filmes.
+4. Habilitar execução paralela após validar o isolamento das massas.
+5. Planejar CI/CD e publicação de relatórios somente após consolidar as suítes Web e API.

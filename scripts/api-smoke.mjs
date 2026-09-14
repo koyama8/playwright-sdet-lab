@@ -41,7 +41,7 @@ async function run() {
   });
   accessToken = login.data.accessToken;
   refreshToken = login.data.refreshToken;
-  assert(login.data.session.idleTimeoutSeconds === 120, 'Timeout de inatividade deve ser 120s');
+  assert(login.data.session.idleTimeoutSeconds === 600, 'Timeout de inatividade deve ser 600s');
 
   await request('/api/people', { expected: 401 });
   await request('/api/people?page=0', { token: accessToken, expected: 400 });

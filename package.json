@@ -23,6 +23,10 @@
     "test:bdd": "playwright test --project=bdd-chromium",
     "pretest:bdd:headed": "npm run bdd:generate",
     "test:bdd:headed": "playwright test --project=bdd-chromium --headed",
+    "pretest:web:ui": "npm run bdd:generate",
+    "test:web:ui": "playwright test --ui --project=bdd-chromium --grep \"@web\"",
+    "pretest:api:ui": "npm run bdd:generate",
+    "test:api:ui": "playwright test --ui --project=bdd-chromium --grep \"@api\"",
     "test:smoke": "playwright test tests/smoke",
     "test:smoke:headed": "playwright test tests/smoke --headed",
     "verify": "npm run api:typecheck && npm run api:build && npm run web:build && npm run api:smoke",
@@ -35,6 +39,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.1",
     "playwright-bdd": "^9.2.1",
     "typescript": "^7.0.2"
   }

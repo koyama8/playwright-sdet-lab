@@ -15,7 +15,7 @@ runtime:
         test("deve documentar autenticação e recursos", () => {
           expect(res.getStatus()).to.equal(200);
           expect(res.getBody().data.name).to.equal("Playwright Lab API");
-          expect(res.getBody().data.authentication.idleTimeoutSeconds).to.equal(120);
+          expect(res.getBody().data.authentication.idleTimeoutSeconds).to.equal(600);
           expect(res.getBody().data.resources).to.be.an("array");
         });
 

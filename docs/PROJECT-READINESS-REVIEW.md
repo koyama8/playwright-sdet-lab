@@ -14,7 +14,7 @@ Ainda existem itens recomendados antes de tratar a suíte como base de regressã
 - Removida a marca `Playwright Lab` do topo do menu lateral.
 - Aviso de sessão expirada movido do centro do formulário para um toast no canto inferior direito.
 - Toast com título, ícone, botão de fechar, animação, `role="alert"`, seletor estável e fechamento automático em 15 segundos.
-- Expiração confirmada após 120 segundos reais de inatividade.
+- Expiração confirmada após 600 segundos (10 minutos) reais de inatividade.
 - Motivo da expiração recuperado tanto do `sessionStorage` quanto de `reason=session-expired`, evitando aviso intermitente após o redirecionamento.
 - Corrigida atualização parcial de filme: omitir `favorite` não altera mais o valor existente.
 - Todos os `data-testid` estáticos auditados: não existem IDs duplicados.
@@ -59,7 +59,7 @@ Ainda existem itens recomendados antes de tratar a suíte como base de regressã
 
 | Área           | Cenários mínimos                                                                       |
 | -------------- | -------------------------------------------------------------------------------------- |
-| Autenticação   | login válido/inválido, rota protegida, logout, refresh, rotação, 120 s inativo         |
+| Autenticação   | login válido/inválido, rota protegida, logout, refresh, rotação, 600 s inativo         |
 | Pessoas        | listar, buscar, filtrar, criar, editar parcial, duplicidade, excluir, validações       |
 | Filmes         | listar, buscar, filtrar, criar, upload, editar parcial, favorito, duplicidade, excluir |
 | Permissões     | ADMIN permitido; USER recebe 403 e não vê ações administrativas                        |

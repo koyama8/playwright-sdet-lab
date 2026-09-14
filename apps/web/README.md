@@ -16,7 +16,7 @@ Acesse `http://localhost:3100`. O usuário local é `qa@adminlab.com` e a senha 
 
 ## Fluxos disponíveis
 
-- autenticação, renovação, logout e expiração após 120 segundos sem atividade;
+- autenticação, renovação, logout e expiração após 600 segundos (10 minutos) sem atividade;
 - dashboard com resumo de pessoas e filmes favoritos;
 - criação, consulta, edição, filtro e exclusão de pessoas;
 - criação, consulta, edição, filtro, upload de capa, favorito e exclusão de filmes;

@@ -32,7 +32,7 @@ runtime:
           expect(res.getBody().data.refreshToken).to.be.a("string");
           expect(res.getBody().data.user.role).to.equal("ADMIN");
           expect(res.getBody().data.expiresIn).to.equal(900);
-          expect(res.getBody().data.session.idleTimeoutSeconds).to.equal(120);
+          expect(res.getBody().data.session.idleTimeoutSeconds).to.equal(600);
         });
 
 settings:
