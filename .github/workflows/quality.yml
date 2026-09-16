@@ -1,0 +1,194 @@
+name: Quality Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/api/package-lock.json
+            apps/web/package-lock.json
+
+      - name: Instalar dependências
+        run: |
+          npm ci
+          npm --prefix apps/api ci
+          npm --prefix apps/web ci
+
+      - name: Gerar o Prisma Client
+        run: npm run api:generate
+
+      - name: Validar TypeScript da automação
+        run: npx tsc --noEmit -p tsconfig.json
+
+      - name: Validar e compilar a API
+        run: |
+          npm run api:typecheck
+          npm run api:build
+
+      - name: Compilar a aplicação Web
+        run: npm run web:build
+
+  playwright:
+    name: Playwright BDD
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: playwright_lab
+          POSTGRES_USER: qa_user
+          POSTGRES_PASSWORD: qa_password
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd "pg_isready -U qa_user -d playwright_lab"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      CI: true
+      NODE_ENV: test
+      DATABASE_URL: postgresql://qa_user:qa_password@localhost:5435/playwright_lab?schema=public
+      JWT_SECRET: github-actions-access-secret-with-at-least-32-characters
+      JWT_REFRESH_SECRET: github-actions-refresh-secret-with-at-least-32-characters
+      ACCESS_TOKEN_TTL_SECONDS: 900
+      REFRESH_TOKEN_TTL_DAYS: 7
+      SESSION_IDLE_TIMEOUT_SECONDS: 600
+      WEB_ORIGIN: http://localhost:3100
+      UPLOAD_DIR: uploads
+      API_BASE_URL: http://localhost:3030/api
+      WEB_BASE_URL: http://localhost:3100
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/api/package-lock.json
+            apps/web/package-lock.json
+
+      - name: Instalar dependências
+        run: |
+          npm ci
+          npm --prefix apps/api ci
+          npm --prefix apps/web ci
+
+      - name: Instalar o Chromium e dependências do sistema
+        run: npx playwright install --with-deps chromium
+
+      - name: Preparar o banco de dados
+        working-directory: apps/api
+        run: |
+          npm run prisma:generate
+          npx prisma migrate deploy
+          npm run prisma:seed
+
+      - name: Compilar e iniciar a API
+        env:
+          PORT: 3030
+        run: |
+          npm run api:build
+          npm --prefix apps/api start > api-server.log 2>&1 &
+
+      - name: Aguardar a saúde da API
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent http://localhost:3030/api/health > /dev/null; then
+              echo "API disponível para os testes."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "A API não ficou disponível dentro do tempo esperado."
+          cat api-server.log
+          exit 1
+
+      - name: Gerar os testes BDD
+        run: npm run bdd:generate
+
+      - name: Executar os testes Playwright
+        run: npx playwright test --project=bdd-chromium
+
+      - name: Publicar relatório e evidências
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-evidences-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+            api-server.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Montar a página de evidências
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: node scripts/build-report-site.mjs
+
+      - name: Configurar GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
+
+      - name: Publicar artifact do GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-dist
+
+  deploy-report:
+    name: Publicar relatório
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: playwright
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

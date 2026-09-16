@@ -27,6 +27,7 @@ temp/
 
 # Playwright and BDD generated files
 playwright-report/
+pages-dist/
 test-results/
 blob-report/
 allure-results/

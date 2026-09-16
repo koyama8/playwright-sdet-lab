@@ -1,9 +1,12 @@
 # Playwright SDET Lab
 
-[![Playwright](https://img.shields.io/badge/Playwright-1.63-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Tipado-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![BDD](https://img.shields.io/badge/BDD-Playwright--BDD-23D96C)](https://vitalets.github.io/playwright-bdd/)
-![Autenticação Web](https://img.shields.io/badge/Autentica%C3%A7%C3%A3o%20Web-3%20CTs%20conclu%C3%ADdos-success)
+[![Quality Gate](https://img.shields.io/github/actions/workflow/status/koyama8/playwright-sdet-lab/quality.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=QUALITY%20GATE)](https://github.com/koyama8/playwright-sdet-lab/actions/workflows/quality.yml)
+[![Relatório](https://img.shields.io/badge/RELAT%C3%93RIO-PLAYWRIGHT-45BA4B?style=for-the-badge&logo=playwright&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=report)
+[![Vídeos da Automação](https://img.shields.io/badge/V%C3%8DDEOS-DA%20AUTOMA%C3%87%C3%83O-8B5CF6?style=for-the-badge&logo=youtube&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=videos-web)
+
+[![Playwright](https://img.shields.io/badge/PLAYWRIGHT-1.63-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
+[![TypeScript](https://img.shields.io/badge/TYPESCRIPT-TIPADO-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![BDD](https://img.shields.io/badge/BDD-PLAYWRIGHT--BDD-23D96C?style=for-the-badge)](https://vitalets.github.io/playwright-bdd/)
 
 Laboratório de Engenharia de Qualidade com uma aplicação Web, uma API REST e uma arquitetura de automação baseada em Playwright e TypeScript.
 
@@ -26,29 +29,51 @@ Construir uma suíte profissional de testes Web e API, aplicando práticas de Qu
 
 ## Estado atual
 
-| Componente | Estado |
-| --- | --- |
-| Aplicação Angular | Concluída |
-| API Express + TypeScript | Concluída |
-| PostgreSQL + Prisma | Concluído |
-| Coleção Bruno | Concluída |
-| Instalação e configuração do Playwright | Concluída |
-| Smoke de autenticação | Concluído |
-| Estrutura de pastas da automação | Concluída |
-| Integração Playwright BDD | Concluída |
-| Autenticação Web em BDD | Concluída: 3 cenários |
-| Page Object, fixture e massas da autenticação Web | Concluídos |
-| Automação da autenticação da API | Próxima etapa |
-| Pessoas e Filmes Web/API | Planejados |
+| Componente                                        | Estado                                 |
+| ------------------------------------------------- | -------------------------------------- |
+| Aplicação Angular                                 | Concluída                              |
+| API Express + TypeScript                          | Concluída                              |
+| PostgreSQL + Prisma                               | Concluído                              |
+| Coleção Bruno                                     | Concluída                              |
+| Instalação e configuração do Playwright           | Concluída                              |
+| Smoke de autenticação                             | Concluído                              |
+| Estrutura de pastas da automação                  | Concluída                              |
+| Integração Playwright BDD                         | Concluída                              |
+| Autenticação Web em BDD                           | Concluída: 3 cenários                  |
+| Page Object, fixture e massas da autenticação Web | Concluídos                             |
+| Automação da autenticação da API                  | Em andamento: 2 cenários concluídos    |
+| GitHub Actions                                    | Pipeline de build e testes configurada |
+| Pessoas e Filmes Web/API                          | Planejados                             |
 
-Atualmente existem um smoke técnico e três cenários BDD de autenticação Web concluídos. A base Web já integra Feature, Steps, Fixture, Page Object e massas tipadas. Os arquivos de Pessoas, Filmes e da automação da API apresentados abaixo representam a evolução planejada.
+Atualmente existem um smoke técnico, três cenários BDD de autenticação Web e dois cenários BDD de autenticação da API concluídos. As duas suítes integram Feature, Steps, Fixtures, massas tipadas e suas respectivas camadas Web e API.
+
+## Integração contínua
+
+A workflow `Quality Pipeline` valida cada `push` e `pull request` direcionado à branch `main`. Também é possível iniciá-la manualmente pela aba **Actions** do GitHub.
+
+A esteira possui dois quality gates:
+
+| Job              | Responsabilidade                                                           |
+| ---------------- | -------------------------------------------------------------------------- |
+| `Build`          | Instalar dependências, validar TypeScript e compilar API e Web             |
+| `Playwright BDD` | Preparar PostgreSQL e Prisma, subir a API e executar os cenários Web e API |
+
+O job de testes somente começa depois que o build é aprovado. Em cada execução, o GitHub Actions disponibiliza um artifact chamado `playwright-evidences-<número>` contendo:
+
+- relatório HTML do Playwright;
+- screenshots, vídeos de todos os cenários executados na CI e traces produzidos conforme a configuração;
+- log da API usada durante os testes.
+
+Para consultar as evidências, clique no badge **Relatórios e evidências**, escolha a execução desejada e baixe o artifact exibido no final da página. Os artifacts são mantidos por 30 dias.
+
+Os badges **Relatório Playwright** e **Vídeos Evidências** abrem uma interface publicada no GitHub Pages. A primeira aba incorpora o relatório HTML completo; a segunda reúne automaticamente os vídeos de todos os cenários executados pela última pipeline aprovada na branch `main`.
 
 ## Cobertura de autenticação Web
 
-| ID | Cenário | Tags principais | Estado |
-| --- | --- | --- | --- |
-| `CT-WEB-AUTH-001` | Login com credenciais válidas | `@smoke` `@positive` | Concluído |
-| `CT-WEB-AUTH-002` | Login com credenciais inválidas | `@negative` | Concluído |
+| ID                | Cenário                                  | Tags principais        | Estado    |
+| ----------------- | ---------------------------------------- | ---------------------- | --------- |
+| `CT-WEB-AUTH-001` | Login com credenciais válidas            | `@smoke` `@positive`   | Concluído |
+| `CT-WEB-AUTH-002` | Login com credenciais inválidas          | `@negative`            | Concluído |
 | `CT-WEB-AUTH-003` | Expiração após 10 minutos de inatividade | `@session` `@negative` | Concluído |
 
 O cenário de expiração utiliza o relógio virtual do Playwright para avançar os 10 minutos de forma determinística, sem adicionar espera fixa à execução.
@@ -155,6 +180,9 @@ playwright-sdet-lab/
 |-- docs/                                  # Análises e estratégia
 |-- infra/                                 # Configuração do pgAdmin
 |-- scripts/                               # Utilitários do projeto
+|-- .github/
+|   `-- workflows/
+|       `-- quality.yml                    # Build e testes no GitHub Actions
 |-- playwright.config.ts                   # Configuração do Playwright
 |-- tsconfig.json                          # TypeScript da automação
 |-- package.json
@@ -167,22 +195,22 @@ As pastas ainda vazias utilizam `.gitkeep` apenas para serem versionadas. Esses 
 
 ## Responsabilidade das camadas
 
-| Camada | Responsabilidade |
-| --- | --- |
-| `web/features` | Descrever regras e comportamentos da interface em Gherkin |
-| `web/steps` | Traduzir Given, When e Then Web para chamadas pequenas |
-| `web/pages` | Encapsular locators e ações específicas de uma página |
-| `web/components` | Encapsular elementos compartilhados como dialogs e notificações |
-| `web/fixtures` | Compor páginas e dependências exclusivas da Web |
-| `web/data` | Manter massas utilizadas somente nos cenários Web |
-| `api/features` | Descrever regras e comportamentos da API em Gherkin |
-| `api/steps` | Traduzir Given, When e Then da API para chamadas pequenas |
-| `api/clients` | Encapsular endpoints, verbos, headers e payloads HTTP |
-| `api/contracts` | Validar em runtime o formato das respostas da API |
-| `api/fixtures` | Compor clientes e contextos exclusivos da API |
-| `api/data` | Produzir payloads e massas únicas para a API |
-| `shared` | Centralizar somente fixtures, tipos e configurações realmente comuns |
-| `smoke` | Confirmar rapidamente que os fluxos essenciais estão disponíveis |
+| Camada           | Responsabilidade                                                     |
+| ---------------- | -------------------------------------------------------------------- |
+| `web/features`   | Descrever regras e comportamentos da interface em Gherkin            |
+| `web/steps`      | Traduzir Given, When e Then Web para chamadas pequenas               |
+| `web/pages`      | Encapsular locators e ações específicas de uma página                |
+| `web/components` | Encapsular elementos compartilhados como dialogs e notificações      |
+| `web/fixtures`   | Compor páginas e dependências exclusivas da Web                      |
+| `web/data`       | Manter massas utilizadas somente nos cenários Web                    |
+| `api/features`   | Descrever regras e comportamentos da API em Gherkin                  |
+| `api/steps`      | Traduzir Given, When e Then da API para chamadas pequenas            |
+| `api/clients`    | Encapsular endpoints, verbos, headers e payloads HTTP                |
+| `api/contracts`  | Validar em runtime o formato das respostas da API                    |
+| `api/fixtures`   | Compor clientes e contextos exclusivos da API                        |
+| `api/data`       | Produzir payloads e massas únicas para a API                         |
+| `shared`         | Centralizar somente fixtures, tipos e configurações realmente comuns |
+| `smoke`          | Confirmar rapidamente que os fluxos essenciais estão disponíveis     |
 
 ## Fluxo da automação
 
@@ -266,13 +294,13 @@ npm run web:dev
 
 Serviços locais:
 
-| Serviço | Endereço |
-| --- | --- |
-| Web | `http://localhost:3100` |
-| API | `http://localhost:3030/api` |
-| Health | `http://localhost:3030/api/health` |
-| pgAdmin | `http://localhost:15435` |
-| PostgreSQL | `localhost:5435` |
+| Serviço    | Endereço                           |
+| ---------- | ---------------------------------- |
+| Web        | `http://localhost:3100`            |
+| API        | `http://localhost:3030/api`        |
+| Health     | `http://localhost:3030/api/health` |
+| pgAdmin    | `http://localhost:15435`           |
+| PostgreSQL | `localhost:5435`                   |
 
 Credenciais exclusivas do ambiente local:
 
@@ -351,21 +379,21 @@ Os comandos de UI geram novamente os testes BDD antes de abrir o Playwright. O f
 
 Outros comandos:
 
-| Comando | Finalidade |
-| --- | --- |
-| `npm run test:e2e` | Executar a suíte Playwright |
-| `npm run test:e2e:ui` | Abrir o modo interativo |
-| `npm run test:e2e:report` | Abrir o último relatório HTML |
-| `npm run bdd:generate` | Gerar os testes Playwright a partir das features |
-| `npm run test:bdd` | Gerar e executar a suíte BDD |
-| `npm run test:bdd:headed` | Gerar e executar a suíte BDD com navegador visível |
-| `npm run test:web:ui` | Abrir no Playwright UI somente os cenários com `@web` |
-| `npm run test:api:ui` | Abrir no Playwright UI somente os cenários com `@api` |
-| `npm run web:test` | Executar testes unitários Angular |
-| `npm run api:typecheck` | Validar os tipos da API |
-| `npm run api:build` | Compilar a API |
-| `npm run web:build` | Compilar a aplicação Web |
-| `npm run api:smoke` | Verificar os fluxos principais da API |
+| Comando                   | Finalidade                                            |
+| ------------------------- | ----------------------------------------------------- |
+| `npm run test:e2e`        | Executar a suíte Playwright                           |
+| `npm run test:e2e:ui`     | Abrir o modo interativo                               |
+| `npm run test:e2e:report` | Abrir o último relatório HTML                         |
+| `npm run bdd:generate`    | Gerar os testes Playwright a partir das features      |
+| `npm run test:bdd`        | Gerar e executar a suíte BDD                          |
+| `npm run test:bdd:headed` | Gerar e executar a suíte BDD com navegador visível    |
+| `npm run test:web:ui`     | Abrir no Playwright UI somente os cenários com `@web` |
+| `npm run test:api:ui`     | Abrir no Playwright UI somente os cenários com `@api` |
+| `npm run web:test`        | Executar testes unitários Angular                     |
+| `npm run api:typecheck`   | Validar os tipos da API                               |
+| `npm run api:build`       | Compilar a API                                        |
+| `npm run web:build`       | Compilar a aplicação Web                              |
+| `npm run api:smoke`       | Verificar os fluxos principais da API                 |
 
 ## Próximas etapas
 
@@ -373,4 +401,4 @@ Outros comandos:
 2. Implementar os fluxos Web e API de Pessoas.
 3. Implementar os fluxos Web e API de Filmes.
 4. Habilitar execução paralela após validar o isolamento das massas.
-5. Planejar CI/CD e publicação de relatórios somente após consolidar as suítes Web e API.
+5. Publicar o relatório HTML no GitHub Pages após consolidar as suítes Web e API.

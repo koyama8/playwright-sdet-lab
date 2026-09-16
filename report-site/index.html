@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Relatórios e vídeos da suíte Playwright SDET Lab" />
+    <title>Playwright SDET Lab | Evidências</title>
+    <link rel="stylesheet" href="./styles.css?v=2" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__brand">
+        <span class="hero__logo" aria-hidden="true">PW</span>
+        <div>
+          <p class="eyebrow">QUALITY ENGINEERING</p>
+          <h1>Playwright SDET Lab</h1>
+          <p class="subtitle">Relatórios e evidências da execução automatizada</p>
+        </div>
+      </div>
+      <a
+        class="pipeline-link"
+        href="https://github.com/koyama8/playwright-sdet-lab/actions/workflows/quality.yml"
+      >
+        Ver pipeline
+      </a>
+    </header>
+
+    <main class="shell">
+      <nav class="tabs" aria-label="Evidências da automação">
+        <button class="tab" type="button" data-tab="report">Relatório Playwright</button>
+        <button class="tab" type="button" data-tab="videos-web">Vídeos Web</button>
+        <button class="tab" type="button" data-tab="videos-api">Vídeos API</button>
+      </nav>
+
+      <section class="panel" data-panel="report">
+        <div class="panel__heading">
+          <div>
+            <p class="eyebrow">RESULTADO COMPLETO</p>
+            <h2>Relatório Playwright</h2>
+          </div>
+          <a class="secondary-link" href="./report/index.html" target="_blank" rel="noreferrer">
+            Abrir em nova aba
+          </a>
+        </div>
+        <iframe
+          class="report-frame"
+          src="./report/index.html"
+          title="Relatório HTML do Playwright"
+        ></iframe>
+      </section>
+
+      <section class="panel" data-panel="videos" hidden>
+        <div class="panel__heading">
+          <div>
+            <p class="eyebrow">EVIDÊNCIAS VISUAIS</p>
+            <h2 id="video-heading">Vídeos Web</h2>
+          </div>
+          <span class="video-count" id="video-count">Carregando...</span>
+        </div>
+        <div class="video-grid" id="video-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer>Engenharia de Automação · Playwright SDET</footer>
+
+    <script src="./app.js?v=2" defer></script>
+  </body>
+</html>

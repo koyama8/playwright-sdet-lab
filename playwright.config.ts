@@ -25,13 +25,14 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
+    ['json', { outputFile: 'test-results/results.json' }],
   ],
   use: {
     baseURL,
     launchOptions: { slowMo },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: process.env.CI ? 'on' : 'retain-on-failure',
   },
   projects: [
     {
