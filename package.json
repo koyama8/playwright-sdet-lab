@@ -41,6 +41,7 @@
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.1",
     "playwright-bdd": "^9.2.1",
+    "pw-api-plugin": "2.1.0",
     "typescript": "^7.0.2"
   }
 }
