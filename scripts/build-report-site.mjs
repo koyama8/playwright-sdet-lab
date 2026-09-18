@@ -41,8 +41,9 @@ function scenarioDetails(spec, index) {
   const normalizedFile = spec.file.replaceAll('\\', '/').toLowerCase();
   const tags = spec.tags.map((tag) => tag.toLowerCase());
   const kind = tags.includes('@api') || normalizedFile.includes('/api/') ? 'api' : 'web';
+  const journey = id.match(/^CT-(?:WEB|API)-(.+)-\d+$/)?.[1] ?? 'OUTROS';
 
-  return { id, title, kind };
+  return { id, title, kind, journey };
 }
 
 function collectScenarios(suites, scenarios = []) {
@@ -51,12 +52,8 @@ function collectScenarios(suites, scenarios = []) {
       for (const test of spec.tests) {
         const result = [...test.results]
           .reverse()
-          .find((entry) =>
-            entry.attachments.some((attachment) => attachment.contentType === 'video/webm'),
-          );
-        const attachment = result?.attachments.find(
-          (entry) => entry.contentType === 'video/webm' && entry.path,
-        );
+          .find((entry) => entry.attachments.some((attachment) => attachment.contentType === 'video/webm'));
+        const attachment = result?.attachments.find((entry) => entry.contentType === 'video/webm' && entry.path);
 
         if (attachment?.path) scenarios.push({ spec, videoPath: attachment.path });
       }
@@ -99,9 +96,7 @@ const scenarios =
 const manifest = [];
 
 for (const [index, scenario] of scenarios.entries()) {
-  const videoPath = path.isAbsolute(scenario.videoPath)
-    ? scenario.videoPath
-    : path.resolve(projectRoot, scenario.videoPath);
+  const videoPath = path.isAbsolute(scenario.videoPath) ? scenario.videoPath : path.resolve(projectRoot, scenario.videoPath);
   const filename = `scenario-${String(index + 1).padStart(2, '0')}.webm`;
   await cp(videoPath, path.join(videosDirectory, filename));
   manifest.push({
@@ -110,10 +105,7 @@ for (const [index, scenario] of scenarios.entries()) {
   });
 }
 
-await writeFile(
-  path.join(videosDirectory, 'manifest.json'),
-  `${JSON.stringify(manifest, null, 2)}\n`,
-);
+await writeFile(path.join(videosDirectory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 await writeFile(path.join(outputDirectory, '.nojekyll'), '');
 
 console.log(`Site gerado em pages-dist com ${manifest.length} vídeo(s).`);

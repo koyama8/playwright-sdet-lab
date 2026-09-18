@@ -11,4 +11,13 @@ export class AuthenticationClient {
       data: credenciais,
     });
   }
+
+  async usuarioAuthenticado(tokenAcesso: string): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/auth/me', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
 }

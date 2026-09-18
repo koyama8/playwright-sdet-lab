@@ -17,12 +17,7 @@
           <p class="subtitle">Relatórios e evidências da execução automatizada</p>
         </div>
       </div>
-      <a
-        class="pipeline-link"
-        href="https://github.com/koyama8/playwright-sdet-lab/actions/workflows/quality.yml"
-      >
-        Ver pipeline
-      </a>
+      <a class="pipeline-link" href="https://github.com/koyama8/playwright-sdet-lab/actions/workflows/quality.yml"> Ver pipeline </a>
     </header>
 
     <main class="shell">
@@ -38,15 +33,9 @@
             <p class="eyebrow">RESULTADO COMPLETO</p>
             <h2>Relatório Playwright</h2>
           </div>
-          <a class="secondary-link" href="./report/index.html" target="_blank" rel="noreferrer">
-            Abrir em nova aba
-          </a>
+          <a class="secondary-link" href="./report/index.html" target="_blank" rel="noreferrer"> Abrir em nova aba </a>
         </div>
-        <iframe
-          class="report-frame"
-          src="./report/index.html"
-          title="Relatório HTML do Playwright"
-        ></iframe>
+        <iframe class="report-frame" src="./report/index.html" title="Relatório HTML do Playwright"></iframe>
       </section>
 
       <section class="panel" data-panel="videos" hidden>
@@ -57,7 +46,25 @@
           </div>
           <span class="video-count" id="video-count">Carregando...</span>
         </div>
-        <div class="video-grid" id="video-grid" aria-live="polite"></div>
+
+        <div class="folder-grid" id="folder-grid" aria-live="polite"></div>
+
+        <section class="journey-view" id="journey-view" hidden>
+          <button class="back-button" id="back-to-folders" type="button">
+            <span aria-hidden="true">←</span>
+            Voltar às jornadas
+          </button>
+
+          <div class="journey-heading">
+            <div>
+              <p class="eyebrow">JORNADA DE TESTES</p>
+              <h3 id="journey-title"></h3>
+            </div>
+            <span class="video-count" id="journey-video-count"></span>
+          </div>
+
+          <div class="video-grid" id="video-grid" aria-live="polite"></div>
+        </section>
       </section>
     </main>
 

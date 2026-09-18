@@ -6,6 +6,7 @@ import { type CredenciaisAutenticacao } from '../data/payloads/authentication.pa
 
 type ContextoAutenticacao = {
   credenciais?: CredenciaisAutenticacao;
+  tokenAcesso?: string;
   resposta?: APIResponse;
   corpoResposta?: unknown;
 };
