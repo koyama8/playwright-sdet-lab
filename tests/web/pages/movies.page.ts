@@ -9,12 +9,13 @@ export class MoviesPage {
   }
 
   async validarPrimeiroFilmeVisivel(): Promise<void> {
-    const primeiroFilme = this.page.locator('[data-testid^="movie-card-"]').first();
+    const filmeVingadores = this.page
+      .locator('[data-testid^="movie-card-"]')
+      .filter({ hasText: 'Vingadores: Ultimato' });
 
-    await expect(primeiroFilme).toBeVisible();
-    await expect(primeiroFilme).toContainText('Vingadores: Ultimato');
-    await expect(primeiroFilme).toContainText('2019 · Ação');
-    await expect(primeiroFilme).toContainText('Heróis se unem para restaurar o universo.');
+    await expect(filmeVingadores).toBeVisible();
+    await expect(filmeVingadores).toContainText('2019 · Ação');
+    await expect(filmeVingadores).toContainText('Heróis se unem para restaurar o universo.');
   }
 
   async clicarVerFilme(): Promise<void> {

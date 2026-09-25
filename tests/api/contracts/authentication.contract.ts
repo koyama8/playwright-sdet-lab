@@ -36,15 +36,15 @@ export function validarLoginInvalido(corpoResposta: unknown, status: number): vo
   });
 }
 
-export function validarAuthenticado(corpoResposta: unknown, status:number): void {
-  expect(status).toBe(200)
-  
+export function validarAuthenticado(corpoResposta: unknown, status: number): void {
+  expect(status).toBe(200);
+
   expect(corpoResposta).toMatchObject({
-    data:{
+    data: {
       sub: expect.stringMatching(/\S+/),
-      email:'qa@adminlab.com',
-      role:'ADMIN',
-      type:'access'
-    }
-  })
+      email: 'qa@adminlab.com',
+      role: 'ADMIN',
+      type: 'access',
+    },
+  });
 }
