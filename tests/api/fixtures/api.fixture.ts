@@ -4,7 +4,7 @@ import { ApiClient } from '../clients/api.client';
 import { AuthenticationClient } from '../clients/authentication.client';
 import { MoviesClient } from '../clients/movies.client';
 import { type CredenciaisAutenticacao } from '../data/payloads/authentication.payload';
-import { type MovieApiTestData } from '../data/factories/movies.factory';
+import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
 
 type ContextoAutenticacao = {
   credenciais?: CredenciaisAutenticacao;
@@ -15,6 +15,8 @@ type ContextoAutenticacao = {
 
 type ContextoMovies = {
   filme?: MovieApiTestData;
+  dadosAtualizacao?: MovieUpdateApiTestData;
+  filmeId?: string;
   resposta?: APIResponse;
   corpoResposta?: unknown;
 };

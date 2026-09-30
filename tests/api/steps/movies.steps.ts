@@ -1,7 +1,7 @@
 import { createBdd } from 'playwright-bdd';
 import { test } from '../fixtures/api.fixture';
-import { validarListagemFilmes, validarCadastroFilme } from '../contracts/movies.contract';
-import { createValidMovieApiData, type MovieApiTestData } from '../data/factories/movies.factory';
+import { validarListagemFilmes, validarCadastroFilme, validarBuscarFilme, validarAtualizacaoFilme } from '../contracts/movies.contract';
+import { createValidMovieApiData, createValidMovieUpdateApiData, type MovieApiTestData } from '../data/factories/movies.factory';
 
 const { Given, When, Then } = createBdd(test);
 
@@ -78,4 +78,123 @@ Then('a API deve retornar status 201 com os dados do filme cadastrado', async ({
     throw new Error('Os dados do filme não foram preparados.');
   }
   validarCadastroFilme(corpoResposta, resposta.status(), filme);
+});
+
+Given('possuo um filme cadastrado na API', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  const filme = createValidMovieApiData();
+  const resposta = await moviesClient.cadastrarFilme(tokenAcesso, filme);
+
+  const corpoResposta = await resposta.json();
+
+  contextoMovies.filme = filme;
+  contextoMovies.filmeId = corpoResposta.data.id;
+});
+
+When('envio uma requisição GET para o endpoint do filme cadastrado', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+  const filmeId = contextoMovies.filmeId;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  if (!filmeId) {
+    throw new Error('O ID do filme não foi preparado.');
+  }
+
+  contextoMovies.resposta = await moviesClient.buscarFilme(tokenAcesso, filmeId);
+});
+
+When('recebo a resposta da consulta do filme', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta do filme não foi recebida.');
+  }
+
+  contextoMovies.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 200 com os dados do filme cadastrado', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta de filmes não foi recebida.');
+  }
+
+  validarBuscarFilme(resposta.status());
+});
+
+Given('cadastro um novo filme para realizar a atualização', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  const filme = createValidMovieApiData();
+  const resposta = await moviesClient.cadastrarFilme(tokenAcesso, filme);
+
+  const corpoResposta = await resposta.json();
+
+  contextoMovies.filme = filme;
+  contextoMovies.filmeId = corpoResposta.data.id;
+});
+
+Given('possuo novos dados válidos para atualizar o filme', async ({ contextoMovies }) => {
+  const filmeAtualizado = createValidMovieUpdateApiData();
+
+  contextoMovies.dadosAtualizacao = filmeAtualizado;
+});
+
+When('envio uma requisição PATCH para o endpoint do filme cadastrado', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+  const filmeId = contextoMovies.filmeId;
+  const filmeAtualizado = contextoMovies.dadosAtualizacao;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  if (!filmeId) {
+    throw new Error('O ID do filme não foi preparado.');
+  }
+
+  if (!filmeAtualizado) {
+    throw new Error('Os dados de atualização do filme não foram preparados.');
+  }
+
+  contextoMovies.resposta = await moviesClient.atualizarFilme(tokenAcesso, filmeId, filmeAtualizado);
+});
+
+When('recebo a resposta da atualização do filme', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta do filme não foi recebida.');
+  }
+
+  contextoMovies.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 200 com os dados atualizados do filme', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+  const corporesposta = contextoMovies.corpoResposta;
+  const filmeAtualizado = contextoMovies.dadosAtualizacao;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta de filmes não foi recebida.');
+  }
+
+  if (!filmeAtualizado) {
+    throw new Error('Os dados do filme não foram preparados.');
+  }
+
+  validarAtualizacaoFilme(corporesposta, resposta.status(), filmeAtualizado);
 });

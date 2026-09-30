@@ -1,5 +1,5 @@
 import { APIResponse } from '@playwright/test';
-import { type MovieApiTestData } from '../data/factories/movies.factory';
+import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
 import { ApiClient } from './api.client';
 
 export class MoviesClient {
@@ -21,6 +21,25 @@ export class MoviesClient {
         Authorization: `Bearer ${tokenAcesso}`,
       },
       data: filme,
+    });
+  }
+
+  async buscarFilme(tokenAcesso: string, filmeId: string): Promise<APIResponse> {
+    return this.apiClient.fetch(`/api/movies/${filmeId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
+
+  async atualizarFilme(tokenAcesso: string, filmeId: string, dadosAtualizacao: MovieUpdateApiTestData): Promise<APIResponse> {
+    return this.apiClient.fetch(`/api/movies/${filmeId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+      data: dadosAtualizacao,
     });
   }
 }

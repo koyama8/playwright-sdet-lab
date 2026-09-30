@@ -1,8 +1,26 @@
 import { expect } from '@playwright/test';
-import { type MovieApiTestData } from '../data/factories/movies.factory';
+import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
 
 export function validarListagemFilmes(status: number): void {
   expect(status).toBe(200);
+}
+
+export function validarBuscarFilme(status: number): void {
+  expect(status).toBe(200);
+}
+
+export function validarAtualizacaoFilme(corpoResposta: unknown, status: number, dadosEsperados: MovieUpdateApiTestData): void {
+  expect(status).toBe(200);
+
+  expect(corpoResposta).toMatchObject({
+    data: {
+      id: expect.stringMatching(/\S+/),
+      title: dadosEsperados.title,
+      rating: String(dadosEsperados.rating),
+      synopsis: dadosEsperados.synopsis,
+      updatedAt: expect.stringMatching(/\S+/),
+    },
+  });
 }
 
 export function validarCadastroFilme(corpoResposta: unknown, status: number, filmeEsperado: MovieApiTestData): void {

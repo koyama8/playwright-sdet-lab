@@ -18,3 +18,20 @@ Feature: Filmes da API
         When envio uma requisição POST para o endpoint de filmes
         And recebo a resposta do cadastro do filme
         Then a API deve retornar status 201 com os dados do filme cadastrado
+
+    @CT_API_MOVIES_003 @positive
+    Scenario: CT-API-MOVIES-003 - Buscar filme cadastrado por ID
+        Given que possuo um token de acesso válido
+        And possuo um filme cadastrado na API
+        When envio uma requisição GET para o endpoint do filme cadastrado
+        And recebo a resposta da consulta do filme
+        Then a API deve retornar status 200 com os dados do filme cadastrado
+
+    @CT_API_MOVIES_004 @positive
+    Scenario: CT-API-MOVIES-004 - Atualizar filme cadastrado
+        Given que possuo um token de acesso válido
+        And cadastro um novo filme para realizar a atualização
+        And possuo novos dados válidos para atualizar o filme
+        When envio uma requisição PATCH para o endpoint do filme cadastrado
+        And recebo a resposta da atualização do filme
+        Then a API deve retornar status 200 com os dados atualizados do filme
