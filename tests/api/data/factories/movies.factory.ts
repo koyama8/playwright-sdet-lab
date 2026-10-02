@@ -26,6 +26,13 @@ export function createValidMovieApiData(): MovieApiTestData {
   };
 }
 
+export function createFavoriteMovieApiData(): MovieApiTestData {
+  return {
+    ...createValidMovieApiData(),
+    favorite: true,
+  };
+}
+
 export function createValidMovieUpdateApiData(): MovieUpdateApiTestData {
   return {
     title: `Filme Atualizado E2E ${faker.string.uuid()}`,

@@ -41,3 +41,15 @@ export function validarCadastroFilme(corpoResposta: unknown, status: number, fil
     },
   });
 }
+
+export function validarDeletarFilme(corpoResposta: unknown, status: number): void {
+  expect(status).toBe(200);
+
+  expect(corpoResposta).toMatchObject({
+    message: 'Filme excluído com sucesso.',
+  });
+}
+
+export function validarListagemFavoritos(status: number): void {
+  expect(status).toBe(200);
+}

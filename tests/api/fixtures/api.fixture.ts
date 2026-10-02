@@ -3,6 +3,7 @@ import { test as base } from 'playwright-bdd';
 import { ApiClient } from '../clients/api.client';
 import { AuthenticationClient } from '../clients/authentication.client';
 import { MoviesClient } from '../clients/movies.client';
+import { SystemClient } from '../clients/system.client';
 import { type CredenciaisAutenticacao } from '../data/payloads/authentication.payload';
 import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
 
@@ -21,13 +22,20 @@ type ContextoMovies = {
   corpoResposta?: unknown;
 };
 
+type ContextoSystem = {
+  resposta?: APIResponse;
+  corpoResposta?: unknown;
+};
+
 type ApiFixtures = {
   apiRequest: APIRequestContext;
   apiClient: ApiClient;
   authenticationClient: AuthenticationClient;
   moviesClient: MoviesClient;
+  systemClient: SystemClient;
   contextoAutenticacao: ContextoAutenticacao;
   contextoMovies: ContextoMovies;
+  contextoSystem: ContextoSystem;
 };
 
 export const test = base.extend<ApiFixtures>({
@@ -52,11 +60,19 @@ export const test = base.extend<ApiFixtures>({
     await use(new MoviesClient(apiClient));
   },
 
+  systemClient: async ({ apiClient }, use) => {
+    await use(new SystemClient(apiClient));
+  },
+
   contextoAutenticacao: async ({}, use) => {
     await use({});
   },
 
   contextoMovies: async ({}, use) => {
+    await use({});
+  },
+
+  contextoSystem: async ({}, use) => {
     await use({});
   },
 });

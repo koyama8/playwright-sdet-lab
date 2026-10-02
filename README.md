@@ -28,26 +28,9 @@ Demonstrar uma arquitetura de automação Web e API próxima à utilizada em pro
 
 ## Stack
 
-### Aplicação
-
-- Angular
-- Node.js
-- Express
-- TypeScript
-- Prisma
-- PostgreSQL
-- Zod
-- Docker
-
-### Automação
-
-- Playwright Test
-- Playwright BDD
-- TypeScript
-- Faker
-- Bruno
-- GitHub Actions
-- GitHub Pages
+| Aplicação | Automação |
+| --- | --- |
+| Angular, Node.js, Express, TypeScript, Prisma, PostgreSQL, Zod e Docker | Playwright Test, Playwright BDD, TypeScript, Faker, Bruno, GitHub Actions e GitHub Pages |
 
 ## Arquitetura
 

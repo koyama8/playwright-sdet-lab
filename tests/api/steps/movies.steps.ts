@@ -1,7 +1,19 @@
 import { createBdd } from 'playwright-bdd';
 import { test } from '../fixtures/api.fixture';
-import { validarListagemFilmes, validarCadastroFilme, validarBuscarFilme, validarAtualizacaoFilme } from '../contracts/movies.contract';
-import { createValidMovieApiData, createValidMovieUpdateApiData, type MovieApiTestData } from '../data/factories/movies.factory';
+import {
+  validarListagemFilmes,
+  validarCadastroFilme,
+  validarBuscarFilme,
+  validarAtualizacaoFilme,
+  validarDeletarFilme,
+  validarListagemFavoritos,
+} from '../contracts/movies.contract';
+import {
+  createValidMovieApiData,
+  createValidMovieUpdateApiData,
+  createFavoriteMovieApiData,
+  type MovieApiTestData,
+} from '../data/factories/movies.factory';
 
 const { Given, When, Then } = createBdd(test);
 
@@ -197,4 +209,83 @@ Then('a API deve retornar status 200 com os dados atualizados do filme', async (
   }
 
   validarAtualizacaoFilme(corporesposta, resposta.status(), filmeAtualizado);
+});
+
+When('envio uma requisição DELETE para o endpoint do filme cadastrado', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+  const filmeId = contextoMovies.filmeId;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  if (!filmeId) {
+    throw new Error('O ID do filme não foi preparado.');
+  }
+
+  contextoMovies.resposta = await moviesClient.excluirFilme(tokenAcesso, filmeId);
+});
+
+When('recebo a resposta da exclusão do filme', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta do filme não foi recebida.');
+  }
+
+  contextoMovies.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 200 com a mensagem de exclusão', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+  const corpoResposta = contextoMovies.corpoResposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta de filmes não foi recebida.');
+  }
+
+  validarDeletarFilme(corpoResposta, resposta.status());
+});
+
+Given('possuo um filme favorito cadastrado na API', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  const filme = createFavoriteMovieApiData();
+  await moviesClient.cadastrarFilme(tokenAcesso, filme);
+
+  contextoMovies.filme = filme;
+});
+
+When('envio uma requisição GET para o endpoint de filmes favoritos', async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  contextoMovies.resposta = await moviesClient.listarFavoritos(tokenAcesso);
+});
+
+When('recebo a resposta da listagem de filmes favoritos', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('As credenciais não foram preparadas.');
+  }
+
+  contextoMovies.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 200 com a lista de filmes favoritos', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('As credenciais não foram preparadas.');
+  }
+
+  validarListagemFavoritos(resposta.status());
 });

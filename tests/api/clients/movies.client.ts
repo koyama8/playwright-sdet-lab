@@ -42,4 +42,22 @@ export class MoviesClient {
       data: dadosAtualizacao,
     });
   }
+
+  async excluirFilme(tokenAcesso: string, movieId: string): Promise<APIResponse> {
+    return this.apiClient.fetch(`/api/movies/${movieId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
+
+  async listarFavoritos(tokenAcesso: string): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/movies?favorite=true&page=1&pageSize=20', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
 }

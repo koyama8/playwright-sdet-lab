@@ -14,6 +14,9 @@ export class MoviesController {
     const input = { ...req.body, ...(imageUrl !== undefined ? { imageUrl } : {}), ...(req.body.year !== undefined ? { year: Number(req.body.year) } : {}), ...(req.body.rating !== undefined ? { rating: Number(req.body.rating) } : {}) };
     res.json({ data: await this.service.update(req.params.id as string, input) });
   };
-  remove = async (req: Request, res: Response): Promise<void> => { await this.service.remove(req.params.id as string); res.status(204).send(); };
+  remove = async (req: Request, res: Response): Promise<void> => {
+    await this.service.remove(req.params.id as string);
+    res.status(200).json({ message: 'Filme excluído com sucesso.' });
+  };
   favorite = async (req: Request, res: Response): Promise<void> => { res.json({ data: await this.service.toggleFavorite(req.params.id as string) }); };
 }
