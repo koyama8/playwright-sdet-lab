@@ -7,11 +7,14 @@ import {
   validarAtualizacaoFilme,
   validarDeletarFilme,
   validarListagemFavoritos,
+  validarFilmeInvalido,
+  validarPaginacaoInvalida,
 } from '../contracts/movies.contract';
 import {
   createValidMovieApiData,
   createValidMovieUpdateApiData,
   createFavoriteMovieApiData,
+  createInvalidMovieApiData,
   type MovieApiTestData,
 } from '../data/factories/movies.factory';
 
@@ -288,4 +291,73 @@ Then('a API deve retornar status 200 com a lista de filmes favoritos', async ({ 
   }
 
   validarListagemFavoritos(resposta.status());
+});
+
+Given('possuo dados inválidos para cadastrar um filme', async ({ contextoMovies }) => {
+  const filme = createInvalidMovieApiData();
+
+  contextoMovies.filme = filme;
+});
+
+When(
+  'envio uma requisição POST com dados inválidos para o endpoint de filmes',
+  async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+    const tokenAcesso = contextoAutenticacao.tokenAcesso;
+    const filme = contextoMovies.filme;
+
+    if (!tokenAcesso) {
+      throw new Error('O token de acesso não foi preparado.');
+    }
+
+    if (!filme) {
+      throw new Error('Os dados do filme não foram preparados.');
+    }
+
+    contextoMovies.resposta = await moviesClient.rejeitarFilme(tokenAcesso, filme);
+  },
+);
+
+When('recebo a resposta do cadastro do filme com dados inválidos', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da consulta do filme não foi recebida.');
+  }
+
+  contextoMovies.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 400 com os detalhes do erro de validação', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+  const corpoResposta = contextoMovies.corpoResposta;
+
+  if (!resposta) {
+    throw new Error('As credenciais não foram preparadas.');
+  }
+
+  validarFilmeInvalido(corpoResposta, resposta.status());
+});
+
+When(
+  'envio uma requisição GET para o endpoint de filmes com paginação inválida',
+  async ({ moviesClient, contextoAutenticacao, contextoMovies }) => {
+    const tokenAcesso = contextoAutenticacao.tokenAcesso;
+
+    if (!tokenAcesso) {
+      throw new Error('O token de acesso não foi preparado.');
+    }
+
+    contextoMovies.resposta = await moviesClient.listagemPaginacaoInvalida(tokenAcesso);
+  },
+);
+
+Then('a API deve retornar status 400 com o erro de validação da paginação', async ({ contextoMovies }) => {
+  const resposta = contextoMovies.resposta;
+  const corpoResposta = contextoMovies.corpoResposta;
+
+  if (!resposta) {
+    throw new Error('As credenciais não foram preparadas.');
+  }
+
+  validarPaginacaoInvalida(corpoResposta, resposta.status());
 });

@@ -33,6 +33,17 @@ export function createFavoriteMovieApiData(): MovieApiTestData {
   };
 }
 
+export function createInvalidMovieApiData(): MovieApiTestData {
+  return {
+    title: 'X',
+    genre: 'D',
+    year: 1700,
+    rating: 15,
+    favorite: false,
+    synopsis: 'curta',
+  };
+}
+
 export function createValidMovieUpdateApiData(): MovieUpdateApiTestData {
   return {
     title: `Filme Atualizado E2E ${faker.string.uuid()}`,

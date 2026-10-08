@@ -60,4 +60,23 @@ export class MoviesClient {
       },
     });
   }
+
+  async rejeitarFilme(tokenAcesso: string, filme: MovieApiTestData): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/movies', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+      data: filme,
+    });
+  }
+
+  async listagemPaginacaoInvalida(tokenAcesso: string): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/movies?page=0&pageSize=500', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
 }

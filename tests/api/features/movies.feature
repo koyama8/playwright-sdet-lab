@@ -51,3 +51,18 @@ Feature: Filmes da API
         When envio uma requisição GET para o endpoint de filmes favoritos
         And recebo a resposta da listagem de filmes favoritos
         Then a API deve retornar status 200 com a lista de filmes favoritos
+
+    @CT_API_MOVIES_007 @negative
+    Scenario: CT-API-MOVIES-007 - Rejeitar filme com payload inválido
+        Given que possuo um token de acesso válido
+        And possuo dados inválidos para cadastrar um filme
+        When envio uma requisição POST com dados inválidos para o endpoint de filmes
+        And recebo a resposta do cadastro do filme com dados inválidos
+        Then a API deve retornar status 400 com os detalhes do erro de validação
+
+    @CT_API_MOVIES_008 @negative
+    Scenario: CT-API-MOVIES-008 - Rejeitar paginação inválida
+        Given que possuo um token de acesso válido
+        When envio uma requisição GET para o endpoint de filmes com paginação inválida
+        And recebo a resposta da consulta de filmes
+        Then a API deve retornar status 400 com o erro de validação da paginação

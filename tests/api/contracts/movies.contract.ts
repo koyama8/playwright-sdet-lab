@@ -53,3 +53,36 @@ export function validarDeletarFilme(corpoResposta: unknown, status: number): voi
 export function validarListagemFavoritos(status: number): void {
   expect(status).toBe(200);
 }
+
+export function validarFilmeInvalido(corpoResposta: unknown, status: number): void {
+  expect(status).toBe(400);
+
+  expect(corpoResposta).toMatchObject({
+    error: {
+      code: 'VALIDATION_ERROR',
+      message: 'Invalid request',
+    },
+  });
+}
+
+export function validarPaginacaoInvalida(corpoResposta: unknown, status: number): void {
+  expect(status).toBe(400);
+
+  expect(corpoResposta).toMatchObject({
+    error: {
+      code: 'VALIDATION_ERROR',
+      message: 'Invalid request',
+      details: expect.arrayContaining([
+        expect.objectContaining({
+          code: 'too_small',
+          path: ['page'],
+        }),
+        expect.objectContaining({
+          code: 'too_big',
+          path: ['pageSize'],
+        }),
+      ]),
+      requestId: expect.any(String),
+    },
+  });
+}
