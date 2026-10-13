@@ -1,6 +1,6 @@
 import { APIResponse } from '@playwright/test';
-import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
-import { ApiClient } from './api.client';
+import { type MovieApiTestData, type MovieUpdateApiTestData } from '../../data/factories/movies/movies.factory';
+import { ApiClient } from '../api.client';
 
 export class MoviesClient {
   constructor(readonly apiClient: ApiClient) {}

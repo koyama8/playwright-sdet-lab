@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
+import { type MovieApiTestData, type MovieUpdateApiTestData } from '../../data/factories/movies/movies.factory';
 
 export function validarListagemFilmes(status: number): void {
   expect(status).toBe(200);

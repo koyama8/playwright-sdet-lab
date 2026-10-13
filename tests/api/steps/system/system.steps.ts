@@ -1,6 +1,6 @@
 import { createBdd } from 'playwright-bdd';
-import { test } from '../fixtures/api.fixture';
-import { validarRestauracaoMassas } from '../contracts/system.contract';
+import { test } from '../../fixtures/api.fixture';
+import { validarRestauracaoMassas } from '../../contracts/system/system.contract';
 
 const { When, Then } = createBdd(test);
 

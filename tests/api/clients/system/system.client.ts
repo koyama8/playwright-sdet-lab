@@ -1,6 +1,6 @@
 import { APIResponse } from '@playwright/test';
 
-import { ApiClient } from './api.client';
+import { ApiClient } from '../api.client';
 
 export class SystemClient {
   constructor(readonly apiClient: ApiClient) {}

@@ -1,5 +1,5 @@
 import { createBdd } from 'playwright-bdd';
-import { test } from '../fixtures/api.fixture';
+import { test } from '../../fixtures/api.fixture';
 import {
   validarListagemFilmes,
   validarCadastroFilme,
@@ -9,14 +9,14 @@ import {
   validarListagemFavoritos,
   validarFilmeInvalido,
   validarPaginacaoInvalida,
-} from '../contracts/movies.contract';
+} from '../../contracts/movies/movies.contract';
 import {
   createValidMovieApiData,
   createValidMovieUpdateApiData,
   createFavoriteMovieApiData,
   createInvalidMovieApiData,
   type MovieApiTestData,
-} from '../data/factories/movies.factory';
+} from '../../data/factories/movies/movies.factory';
 
 const { Given, When, Then } = createBdd(test);
 

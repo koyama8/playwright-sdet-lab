@@ -1,11 +1,12 @@
 import { type APIRequestContext, type APIResponse } from '@playwright/test';
 import { test as base } from 'playwright-bdd';
 import { ApiClient } from '../clients/api.client';
-import { AuthenticationClient } from '../clients/authentication.client';
-import { MoviesClient } from '../clients/movies.client';
-import { SystemClient } from '../clients/system.client';
-import { type CredenciaisAutenticacao } from '../data/payloads/authentication.payload';
-import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies.factory';
+import { AuthenticationClient } from '../clients/authentication/authentication.client';
+import { MoviesClient } from '../clients/movies/movies.client';
+import { PeopleClient } from '../clients/people/people.client';
+import { SystemClient } from '../clients/system/system.client';
+import { type CredenciaisAutenticacao } from '../data/payloads/authentication/authentication.payload';
+import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies/movies.factory';
 
 type ContextoAutenticacao = {
   credenciais?: CredenciaisAutenticacao;
@@ -27,14 +28,21 @@ type ContextoSystem = {
   corpoResposta?: unknown;
 };
 
+type ContextoPeople = {
+  resposta?: APIResponse;
+  corpoResposta?: unknown;
+};
+
 type ApiFixtures = {
   apiRequest: APIRequestContext;
   apiClient: ApiClient;
   authenticationClient: AuthenticationClient;
   moviesClient: MoviesClient;
+  peopleClient: PeopleClient;
   systemClient: SystemClient;
   contextoAutenticacao: ContextoAutenticacao;
   contextoMovies: ContextoMovies;
+  contextoPeople: ContextoPeople;
   contextoSystem: ContextoSystem;
 };
 
@@ -60,6 +68,10 @@ export const test = base.extend<ApiFixtures>({
     await use(new MoviesClient(apiClient));
   },
 
+  peopleClient: async ({ apiClient }, use) => {
+    await use(new PeopleClient(apiClient));
+  },
+
   systemClient: async ({ apiClient }, use) => {
     await use(new SystemClient(apiClient));
   },
@@ -69,6 +81,10 @@ export const test = base.extend<ApiFixtures>({
   },
 
   contextoMovies: async ({}, use) => {
+    await use({});
+  },
+
+  contextoPeople: async ({}, use) => {
     await use({});
   },
 

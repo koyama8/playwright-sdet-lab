@@ -1,7 +1,7 @@
 import { createBdd } from 'playwright-bdd';
-import { validarLoginComSucesso, validarLoginInvalido, validarAuthenticado } from '../contracts/authentication.contract';
-import { credenciaisInvalidas, credenciaisValidas } from '../data/payloads/authentication.payload';
-import { test } from '../fixtures/api.fixture';
+import { validarLoginComSucesso, validarLoginInvalido, validarAuthenticado } from '../../contracts/authentication/authentication.contract';
+import { credenciaisInvalidas, credenciaisValidas } from '../../data/payloads/authentication/authentication.payload';
+import { test } from '../../fixtures/api.fixture';
 
 const { Given, When, Then } = createBdd(test);
 

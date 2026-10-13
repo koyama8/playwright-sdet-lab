@@ -1,6 +1,6 @@
 import { type APIResponse } from '@playwright/test';
-import { type CredenciaisAutenticacao } from '../data/payloads/authentication.payload';
-import { ApiClient } from './api.client';
+import { type CredenciaisAutenticacao } from '../../data/payloads/authentication/authentication.payload';
+import { ApiClient } from '../api.client';
 
 export class AuthenticationClient {
   constructor(readonly apiClient: ApiClient) {}
