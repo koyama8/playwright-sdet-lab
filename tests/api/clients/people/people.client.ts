@@ -1,5 +1,26 @@
+import { type APIResponse } from '@playwright/test';
 import { ApiClient } from '../api.client';
+import { type PersonApiTestData } from '../../data/factories/people/people.factory';
 
 export class PeopleClient {
   constructor(readonly apiClient: ApiClient) {}
+
+  async listarPessoas(tokenAcesso: string): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/people?page=1&pageSize=20', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
+
+  async cadastrarPessoa(tokenAcesso: string, pessoa: PersonApiTestData): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/people', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+      data: pessoa,
+    });
+  }
 }
