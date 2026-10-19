@@ -1,6 +1,6 @@
 import { type APIResponse } from '@playwright/test';
 import { ApiClient } from '../api.client';
-import { type PersonApiTestData } from '../../data/factories/people/people.factory';
+import { type PersonApiTestData, PersonUpdateApiTestData } from '../../data/factories/people/people.factory';
 
 export class PeopleClient {
   constructor(readonly apiClient: ApiClient) {}
@@ -17,6 +17,25 @@ export class PeopleClient {
   async cadastrarPessoa(tokenAcesso: string, pessoa: PersonApiTestData): Promise<APIResponse> {
     return this.apiClient.fetch('/api/people', {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+      data: pessoa,
+    });
+  }
+
+  async buscarPessoa(tokenAcesso: string, personId: string): Promise<APIResponse> {
+    return this.apiClient.fetch(`/api/people/${personId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
+
+  async atualizaPessoa(tokenAcesso: string, personId: string, pessoa: PersonUpdateApiTestData): Promise<APIResponse> {
+    return this.apiClient.fetch(`/api/people/${personId}`, {
+      method: 'PATCH',
       headers: {
         Authorization: `Bearer ${tokenAcesso}`,
       },

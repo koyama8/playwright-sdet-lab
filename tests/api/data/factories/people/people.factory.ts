@@ -8,6 +8,11 @@ export type PersonApiTestData = {
   status: 'ACTIVE' | 'INACTIVE';
 };
 
+export type PersonUpdateApiTestData = {
+  name: string;
+  role: string;
+};
+
 export function createValidPersonApiData(): PersonApiTestData {
   return {
     name: `Pessoa API E2E ${faker.string.uuid()}`,
@@ -15,5 +20,12 @@ export function createValidPersonApiData(): PersonApiTestData {
     phone: '+55 11 99999-0000',
     role: 'QA Automation Engineer',
     status: 'ACTIVE',
+  };
+}
+
+export function createValidPersonUpdateApiData(): PersonUpdateApiTestData {
+  return {
+    name: `Pessoa Atualizada E2E ${faker.string.uuid()}`,
+    role: 'SDET',
   };
 }

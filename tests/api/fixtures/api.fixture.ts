@@ -7,7 +7,7 @@ import { PeopleClient } from '../clients/people/people.client';
 import { SystemClient } from '../clients/system/system.client';
 import { type CredenciaisAutenticacao } from '../data/payloads/authentication/authentication.payload';
 import { type MovieApiTestData, type MovieUpdateApiTestData } from '../data/factories/movies/movies.factory';
-import { type PersonApiTestData } from '../data/factories/people/people.factory';
+import { type PersonApiTestData, type PersonUpdateApiTestData } from '../data/factories/people/people.factory';
 
 type ContextoAutenticacao = {
   credenciais?: CredenciaisAutenticacao;
@@ -31,6 +31,8 @@ type ContextoSystem = {
 
 type ContextoPeople = {
   pessoa?: PersonApiTestData;
+  dadosAtualizados?: PersonUpdateApiTestData;
+  pessoaId?: string;
   resposta?: APIResponse;
   corpoResposta?: unknown;
 };

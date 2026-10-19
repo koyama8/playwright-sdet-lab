@@ -19,3 +19,22 @@ export function validarCadastro(corpoResposta: unknown, status: number, dadosEsp
     },
   });
 }
+
+export function validarBusca(corpoResposta: unknown, status: number, dadosEsperados: PersonApiTestData): void {
+  expect(status).toBe(200);
+
+  expect(corpoResposta).toMatchObject({
+    data: {
+      id: expect.stringMatching(/\S+/),
+      name: dadosEsperados.name,
+      email: dadosEsperados.email,
+      phone: dadosEsperados.phone,
+      role: dadosEsperados.role,
+      status: dadosEsperados.status,
+    },
+  });
+}
+
+export function validarAtualizacao(status: number): void {
+  expect(status).toBe(200);
+}
