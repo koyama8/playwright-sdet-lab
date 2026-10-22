@@ -35,3 +35,10 @@ Feature: Pessoas da API
         When envio uma requisição PATCH para o endpoint da pessoa cadastrada
         And recebo a resposta da atualização da pessoa
         Then a API deve retornar status 200 com os dados atualizados da pessoa
+
+    @CT_API_PEOPLE_005 @positive
+    Scenario: CT-API-PEOPLE-005 - Filtrar pessoas ativas
+        Given que possuo um token de acesso válido
+        When envio uma requisição GET para o endpoint de pessoas com filtros de status, busca e paginação
+        And recebo a resposta da consulta de pessoas filtradas
+        Then a API deve retornar status 200 com a lista de pessoas filtradas

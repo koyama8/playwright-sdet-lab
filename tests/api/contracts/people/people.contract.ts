@@ -38,3 +38,19 @@ export function validarBusca(corpoResposta: unknown, status: number, dadosEspera
 export function validarAtualizacao(status: number): void {
   expect(status).toBe(200);
 }
+
+export function validarDados(corpoResposta: unknown, status: number): void {
+  expect(status).toBe(200);
+
+  expect(corpoResposta).toMatchObject({
+    data: {
+      items: expect.any(Array),
+      pagination: {
+        page: 1,
+        pageSize: 10,
+        total: expect.any(Number),
+        totalPages: expect.any(Number),
+      },
+    },
+  });
+}

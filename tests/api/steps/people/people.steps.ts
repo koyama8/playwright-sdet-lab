@@ -1,6 +1,6 @@
 import { createBdd } from 'playwright-bdd';
 import { test } from '../../fixtures/api.fixture';
-import { validarListagem, validarCadastro, validarBusca, validarAtualizacao } from '../../contracts/people/people.contract';
+import { validarListagem, validarCadastro, validarBusca, validarAtualizacao, validarDados } from '../../contracts/people/people.contract';
 import { createValidPersonApiData, createValidPersonUpdateApiData } from '../../data/factories/people/people.factory';
 
 const { Given, When, Then } = createBdd(test);
@@ -198,4 +198,38 @@ Then('a API deve retornar status 200 com os dados atualizados da pessoa', async 
   }
 
   validarAtualizacao(resposta.status());
+});
+
+When(
+  'envio uma requisição GET para o endpoint de pessoas com filtros de status, busca e paginação',
+  async ({ peopleClient, contextoAutenticacao, contextoPeople }) => {
+    const tokenAcesso = contextoAutenticacao.tokenAcesso;
+
+    if (!tokenAcesso) {
+      throw new Error('O token de acesso não foi preparado.');
+    }
+
+    contextoPeople.resposta = await peopleClient.filtrarPessoas(tokenAcesso);
+  },
+);
+
+When('recebo a resposta da consulta de pessoas filtradas', async ({ contextoPeople }) => {
+  const resposta = contextoPeople.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta do cadastro da pessoa não foi recebida.');
+  }
+
+  contextoPeople.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 200 com a lista de pessoas filtradas', async ({ contextoPeople }) => {
+  const resposta = contextoPeople.resposta;
+  const corpoResposta = contextoPeople.corpoResposta;
+
+  if (!resposta) {
+    throw new Error('A resposta do cadastro da pessoa não foi recebida.');
+  }
+
+  validarDados(corpoResposta, resposta.status());
 });

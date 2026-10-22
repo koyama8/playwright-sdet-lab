@@ -42,4 +42,13 @@ export class PeopleClient {
       data: pessoa,
     });
   }
+
+  async filtrarPessoas(tokenAcesso: string): Promise<APIResponse> {
+    return this.apiClient.fetch('/api/people?status=ACTIVE&q=Playwright&page=1&pageSize=10', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
 }
