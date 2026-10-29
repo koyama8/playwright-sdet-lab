@@ -1,6 +1,13 @@
 import { createBdd } from 'playwright-bdd';
 import { test } from '../../fixtures/api.fixture';
-import { validarListagem, validarCadastro, validarBusca, validarAtualizacao, validarDados } from '../../contracts/people/people.contract';
+import {
+  validarListagem,
+  validarCadastro,
+  validarBusca,
+  validarAtualizacao,
+  validarDados,
+  validarExclusao,
+} from '../../contracts/people/people.contract';
 import { createValidPersonApiData, createValidPersonUpdateApiData } from '../../data/factories/people/people.factory';
 
 const { Given, When, Then } = createBdd(test);
@@ -232,4 +239,40 @@ Then('a API deve retornar status 200 com a lista de pessoas filtradas', async ({
   }
 
   validarDados(corpoResposta, resposta.status());
+});
+
+When('envio uma requisição DELETE para o endpoint da pessoa cadastrada', async ({ peopleClient, contextoAutenticacao, contextoPeople }) => {
+  const tokenAcesso = contextoAutenticacao.tokenAcesso;
+  const pessoaId = contextoPeople.pessoaId;
+
+  if (!tokenAcesso) {
+    throw new Error('O token de acesso não foi preparado.');
+  }
+
+  if (!pessoaId) {
+    throw new Error('O ID da pessoa não foi preparado.');
+  }
+
+  contextoPeople.resposta = await peopleClient.deletarPessoa(tokenAcesso, pessoaId);
+});
+
+When('recebo a resposta da exclusão da pessoa', async ({ contextoPeople }) => {
+  const resposta = contextoPeople.resposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da exclusão da pessoa não foi recebida.');
+  }
+
+  contextoPeople.corpoResposta = await resposta.json();
+});
+
+Then('a API deve retornar status 200 com a mensagem de exclusão da pessoa', ({ contextoPeople }) => {
+  const resposta = contextoPeople.resposta;
+  const corpoResposta = contextoPeople.corpoResposta;
+
+  if (!resposta) {
+    throw new Error('A resposta da exclusão da pessoa não foi recebida.');
+  }
+
+  validarExclusao(corpoResposta, resposta.status());
 });

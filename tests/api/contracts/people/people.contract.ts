@@ -54,3 +54,12 @@ export function validarDados(corpoResposta: unknown, status: number): void {
     },
   });
 }
+
+export function validarExclusao(corpoResposta: unknown, status: number): void {
+  expect(status).toBe(200);
+
+  expect(corpoResposta).toMatchObject({
+    message: 'Pessoa excluída com sucesso',
+  });
+}
+

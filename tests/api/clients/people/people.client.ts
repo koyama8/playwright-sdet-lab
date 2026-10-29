@@ -51,4 +51,13 @@ export class PeopleClient {
       },
     });
   }
+
+  async deletarPessoa(tokenAcesso: string, personId: string): Promise<APIResponse> {
+    return this.apiClient.fetch(`/api/people/${personId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${tokenAcesso}`,
+      },
+    });
+  }
 }

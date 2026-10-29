@@ -42,3 +42,11 @@ Feature: Pessoas da API
         When envio uma requisição GET para o endpoint de pessoas com filtros de status, busca e paginação
         And recebo a resposta da consulta de pessoas filtradas
         Then a API deve retornar status 200 com a lista de pessoas filtradas
+
+    @CT_API_PEOPLE_006 @positive
+    Scenario: CT-API-PEOPLE-006 - Excluir pessoa cadastrada
+        Given que possuo um token de acesso válido
+        And possuo uma pessoa cadastrada na API
+        When envio uma requisição DELETE para o endpoint da pessoa cadastrada
+        And recebo a resposta da exclusão da pessoa
+        Then a API deve retornar status 200 com a mensagem de exclusão da pessoa
