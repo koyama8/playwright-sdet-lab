@@ -39,7 +39,7 @@ export class AuthenticationPage {
   }
 
   async simularPeriodoInativo(): Promise<void> {
-    await this.page.clock.fastForward('09:59');
+    await this.page.clock.fastForward('19:59');
   }
 
   async atingirTempoLimiteSessao(): Promise<void> {
@@ -49,7 +49,7 @@ export class AuthenticationPage {
   async validarSessaoExpirada(): Promise<void> {
     await expect(this.page).toHaveURL(/\/login\?reason=session-expired$/);
     await expect(
-      this.page.getByText('Você ficou 10 minutos sem atividade. Entre novamente.', {
+      this.page.getByText('Você ficou 20 minutos sem atividade. Entre novamente.', {
         exact: true,
       }),
     ).toBeVisible();

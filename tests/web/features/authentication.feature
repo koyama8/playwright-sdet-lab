@@ -19,8 +19,8 @@ Feature: Autenticação Web
     Then o usuário deve permanecer na página de login e visualizar a mensagem de credenciais inválidas
 
   @CT_WEB_AUTH_003 @session @negative
-  Scenario: CT-WEB-AUTH-003 - Expirar sessão após dez minutos de inatividade
+  Scenario: CT-WEB-AUTH-003 - Expirar sessão após vinte minutos de inatividade
     Given que o usuário está autenticado no sistema
     When o usuário permanece sem realizar nenhuma atividade
-    And o tempo limite de dez minutos da sessão é atingido
+    And o tempo limite de vinte minutos da sessão é atingido
     Then o usuário deve ser redirecionado para a página de login e visualizar a notificação de sessão expirada

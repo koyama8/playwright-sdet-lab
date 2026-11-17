@@ -1,88 +1,64 @@
 # Playwright SDET Lab
 
-[![Quality Gate](https://img.shields.io/github/actions/workflow/status/koyama8/playwright-sdet-lab/quality.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=QUALITY%20GATE)](https://github.com/koyama8/playwright-sdet-lab/actions/workflows/quality.yml)
 [![Relatório](https://img.shields.io/badge/RELAT%C3%93RIO-PLAYWRIGHT-45BA4B?style=for-the-badge&logo=playwright&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=report)
 [![Vídeos](https://img.shields.io/badge/V%C3%8DDEOS-AUTOMA%C3%87%C3%83O-8B5CF6?style=for-the-badge&logo=youtube&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=videos-web)
-
 [![Playwright](https://img.shields.io/badge/PLAYWRIGHT-1.63-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![TypeScript](https://img.shields.io/badge/TYPESCRIPT-TIPADO-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![BDD](https://img.shields.io/badge/BDD-PLAYWRIGHT--BDD-23D96C?style=for-the-badge)](https://vitalets.github.io/playwright-bdd/)
 
-Laboratório de Engenharia de Qualidade que reúne uma aplicação Web, uma API REST e uma suíte de automação construída com Playwright, TypeScript e BDD.
+Laboratório completo de Engenharia de Qualidade com aplicação Web, API REST, banco de dados e automação de testes utilizando Playwright, TypeScript e BDD.
 
-O sistema disponibiliza autenticação, controle de sessão, perfis de acesso e operações sobre pessoas e filmes, com persistência em PostgreSQL.
+O projeto demonstra práticas utilizadas em projetos profissionais, como Page Objects, API Clients, fixtures tipadas, massas dinâmicas, contratos de resposta e geração de evidências.
 
-## Objetivo
+## Sobre o projeto
 
-Demonstrar uma arquitetura de automação Web e API próxima à utilizada em projetos reais, priorizando:
+O Playwright SDET Lab demonstra uma arquitetura profissional de automação Web e API com Playwright, TypeScript e BDD.
 
-- cenários executáveis em BDD/Gherkin;
-- separação clara de responsabilidades;
-- Page Objects para interações Web;
-- API Clients para requisições HTTP;
-- fixtures e contextos isolados por cenário;
-- factories para criação de massas dinâmicas;
-- contratos para validação de respostas;
-- execução local e em pipeline;
-- relatórios, vídeos, screenshots e traces.
+A aplicação possui autenticação, controle de acesso e gerenciamento de pessoas e filmes, com persistência em PostgreSQL.
 
-## Stack
+**Práticas aplicadas:** Gherkin · Page Object Model · API Clients · Fixtures tipadas · Factories · Contratos · Relatórios e evidências
 
-| Aplicação | Automação |
+## Tecnologias
+
+| Área | Tecnologias |
 | --- | --- |
-| Angular, Node.js, Express, TypeScript, Prisma, PostgreSQL, Zod e Docker | Playwright Test, Playwright BDD, TypeScript, Faker, Bruno, GitHub Actions e GitHub Pages |
+| Automação | Playwright Test, playwright-bdd e TypeScript |
+| Aplicação Web | Angular e TypeScript |
+| API | Node.js, Express, TypeScript e Zod |
+| Persistência | PostgreSQL e Prisma |
+| Massa de testes | Faker |
+| Exploração de API | Bruno |
+| Infraestrutura | Docker e Docker Compose |
 
-## Arquitetura
+## Arquitetura da solução
 
 ```text
-playwright-sdet-lab/
-├── apps/
-│   ├── api/                         # API Express
-│   └── web/                         # Aplicação Angular
-│
-├── tests/
-│   ├── api/
-│   │   ├── clients/                 # Requisições e endpoints
-│   │   ├── contracts/               # Validação das respostas
-│   │   ├── data/
-│   │   │   ├── factories/           # Massas dinâmicas
-│   │   │   └── payloads/            # Payloads fixos
-│   │   ├── features/                # Cenários BDD da API
-│   │   ├── fixtures/                # Clients e contextos da API
-│   │   └── steps/                   # Steps da API
-│   │
-│   ├── web/
-│   │   ├── data/                    # Massas da automação Web
-│   │   ├── features/                # Cenários BDD Web
-│   │   ├── fixtures/                # Page Objects e contextos Web
-│   │   ├── pages/                   # Page Objects
-│   │   └── steps/                   # Steps Web
-│   │
-│   └── smoke/                       # Validação rápida do sistema
-│
-├── bruno/                            # Coleção para exploração da API
-├── docs/                             # Documentação complementar
-├── infra/                            # Infraestrutura local
-├── report-site/                      # Interface de evidências
-├── scripts/                          # Scripts de apoio e publicação
-├── .github/workflows/quality.yml     # Quality Pipeline
-├── playwright.config.ts
-├── docker-compose.yml
-├── package.json
-└── README.md
+                     ┌─────────────────┐
+                     │ Feature Gherkin │
+                     └────────┬────────┘
+                              │
+                     ┌────────▼────────┐
+                     │ Step Definition │
+                     └────────┬────────┘
+                              │
+               ┌──────────────┴──────────────┐
+               │                             │
+      ┌────────▼────────┐           ┌────────▼────────┐
+      │   Web Fixture   │           │   API Fixture   │
+      └────────┬────────┘           └────────┬────────┘
+               │                             │
+      ┌────────▼────────┐           ┌────────▼────────┐
+      │   Page Object   │           │   API Client    │
+      └────────┬────────┘           └────────┬────────┘
+               │                             │
+      ┌────────▼────────┐           ┌────────▼────────┐
+      │ Aplicação Web   │           │    API REST     │
+      └─────────────────┘           └────────┬────────┘
+                                             │
+                                    ┌────────▼────────┐
+                                    │    Contract     │
+                                    └─────────────────┘
 ```
-
-## Organização da automação
-
-| Camada | Responsabilidade |
-| --- | --- |
-| `features` | Descrever os comportamentos em Gherkin |
-| `steps` | Conectar o cenário às camadas de automação |
-| `pages` | Encapsular locators e ações da interface |
-| `clients` | Encapsular endpoints, headers e requisições |
-| `fixtures` | Criar e entregar dependências isoladas |
-| `data` | Fornecer payloads e massas de teste |
-| `contracts` | Validar status e dados retornados pela API |
 
 ### Fluxo Web
 
@@ -94,16 +70,113 @@ Feature → Steps → Fixture → Page Object → Aplicação Web
 
 ```text
 Feature → Steps → Fixture → API Client → API REST
-                               ↓
-                            Contract
+                                            ↓
+                                         Contract
 ```
+
+## Estrutura do projeto
+
+```text
+playwright-sdet-lab/
+├── apps/
+│   ├── api/                          # API REST com Express e Prisma
+│   └── web/                          # Aplicação Web Angular
+│
+├── tests/
+│   ├── api/
+│   │   ├── clients/                  # Endpoints e requisições HTTP
+│   │   ├── contracts/                # Validações das respostas
+│   │   ├── data/
+│   │   │   ├── factories/            # Massas dinâmicas
+│   │   │   └── payloads/             # Payloads controlados
+│   │   ├── features/                 # Cenários BDD da API
+│   │   ├── fixtures/                 # Clients e estados dos cenários
+│   │   └── steps/                    # Steps da API
+│   │
+│   ├── web/
+│   │   ├── data/                     # Dados da automação Web
+│   │   ├── features/                 # Cenários BDD Web
+│   │   ├── fixtures/                 # Page Objects dos testes
+│   │   ├── pages/                    # Page Objects
+│   │   └── steps/                    # Steps Web
+│   │
+│   └── smoke/                        # Verificação rápida do sistema
+│
+├── bruno/                             # Coleção de requisições da API
+├── docs/                              # Documentação técnica
+├── infra/                             # Configurações de infraestrutura
+├── report-site/                       # Portal de evidências
+├── scripts/                           # Scripts auxiliares
+├── docker-compose.yml
+├── playwright.config.ts
+├── package.json
+└── README.md
+```
+
+## Responsabilidade das camadas
+
+| Camada | Responsabilidade |
+| --- | --- |
+| `features` | Descrever regras e comportamentos em Gherkin |
+| `steps` | Traduzir os cenários e chamar a camada apropriada |
+| `pages` | Encapsular locators, ações e validações Web |
+| `clients` | Encapsular endpoints e requisições HTTP |
+| `fixtures` | Criar e fornecer dependências isoladas |
+| `data` | Disponibilizar payloads e massas de teste |
+| `contracts` | Validar status, estrutura e conteúdo das respostas |
+
+Essa separação evita seletores nos steps, chamadas HTTP nos Page Objects e compartilhamento indevido de estado entre cenários.
+
+## Estratégia de testes
+
+### Testes Web
+
+Os testes Web validam as jornadas observáveis pelo usuário.
+
+Principais práticas:
+
+- Page Object Model;
+- locators semânticos e `data-testid`;
+- assertions web-first;
+- autenticação reutilizável por fixture;
+- cenários independentes;
+- ausência de esperas fixas;
+- execução em navegador real.
+
+### Testes de API
+
+Os testes de API validam os serviços diretamente, sem dependência da interface.
+
+Principais práticas:
+
+- client por domínio;
+- validação de status e corpo;
+- contratos de resposta;
+- cenários positivos e negativos;
+- factories para dados únicos;
+- reaproveitamento controlado de IDs entre steps;
+- restauração das massas quando necessário.
+
+### Classificação por tags
+
+| Tag | Finalidade |
+| --- | --- |
+| `@web` | Cenários da interface Web |
+| `@api` | Cenários da API |
+| `@smoke` | Validação rápida dos fluxos críticos |
+| `@regression` | Cobertura funcional de regressão |
+| `@positive` | Fluxos esperados |
+| `@negative` | Validações de erro |
+| `@auth` | Autenticação e sessão |
+| `@people` | Domínio de pessoas |
+| `@movies` | Domínio de filmes |
 
 ## Pré-requisitos
 
-- Node.js
-- npm
-- Docker Desktop
-- Git
+- Node.js 22 ou superior;
+- npm;
+- Docker Desktop;
+- Git.
 
 ## Instalação
 
@@ -119,10 +192,15 @@ Copy-Item apps/api/.env.example apps/api/.env
 
 ## Preparação do ambiente
 
-Inicie a infraestrutura e prepare o banco:
+Inicie o PostgreSQL e o pgAdmin:
 
 ```powershell
 npm run stack:up
+```
+
+Prepare o Prisma e o banco de dados:
+
+```powershell
 npm run api:generate
 npm run api:migrate
 npm run api:seed
@@ -140,76 +218,107 @@ Em outro terminal, inicie a aplicação Web:
 npm run web:dev
 ```
 
-### Serviços locais
+## Serviços locais
 
 | Serviço | Endereço |
 | --- | --- |
 | Aplicação Web | `http://localhost:3100` |
-| API | `http://localhost:3030/api` |
+| API REST | `http://localhost:3030/api` |
 | Health check | `http://localhost:3030/api/health` |
-| pgAdmin | `http://localhost:15435` |
 | PostgreSQL | `localhost:5435` |
+| pgAdmin | `http://localhost:15435` |
 
-Credenciais do ambiente local:
+### Credenciais da aplicação
 
 ```text
 E-mail: qa@adminlab.com
-Senha:  pwd123
+Senha: pwd123
 ```
 
 ## Execução dos testes
 
-Gerar e executar todos os cenários BDD:
+### Executar todos os cenários BDD
 
 ```powershell
 npm run test:bdd
 ```
 
-Executar com navegador visível:
+### Executar com o navegador visível
 
 ```powershell
 npm run test:bdd:headed
 ```
 
-Abrir somente os cenários Web no Playwright UI:
+### Abrir os testes Web no Playwright UI
 
 ```powershell
 npm run test:web:ui
 ```
 
-Abrir somente os cenários de API no Playwright UI:
+### Abrir os testes de API no Playwright UI
 
 ```powershell
 npm run test:api:ui
 ```
 
-Executar um CT específico:
-
-```powershell
-npm run bdd:generate
-npx playwright test --project=bdd-chromium --grep "@CT_API_MOVIES_001"
-```
-
-Executar o smoke:
+### Executar o smoke test
 
 ```powershell
 npm run test:smoke
 ```
 
-Abrir o último relatório local:
+### Executar um CT específico
+
+Primeiro, gere os testes BDD:
+
+```powershell
+npm run bdd:generate
+```
+
+Depois, filtre pela identificação do cenário:
+
+```powershell
+npx playwright test --project=bdd-chromium --grep "CT-WEB-PEOPLE-002"
+```
+
+### Abrir o último relatório
 
 ```powershell
 npm run test:e2e:report
 ```
 
-## Evidências
+## Evidências de execução
 
-A execução automatizada pode produzir:
+O Playwright pode gerar:
 
-- relatório HTML do Playwright;
-- vídeos dos cenários;
-- screenshots de falhas;
+- relatório HTML;
+- vídeos das execuções;
+- screenshots em falhas;
 - traces para investigação;
+- resultados em JSON;
 - logs da API.
 
-Os badges no início deste README permitem acessar a Quality Pipeline, o relatório publicado e a galeria de vídeos da execução mais recente.
+Os badges no início deste README fornecem acesso ao relatório publicado e à galeria de vídeos da automação.
+
+## Princípios adotados
+
+- cenários independentes e legíveis;
+- steps pequenos e focados na intenção;
+- seletores encapsulados nos Page Objects;
+- requisições encapsuladas nos API Clients;
+- dados isolados por cenário;
+- validações Web com auto-wait;
+- ausência de `waitForTimeout`;
+- arquivos gerados pelo BDD fora do código-fonte;
+- evidências preservadas para investigação.
+
+## Documentação complementar
+
+- `docs/PLAYWRIGHT-BDD-ARCHITECTURE.md`
+- `docs/TEST-DATA.md`
+- `docs/PROJECT-READINESS-REVIEW.md`
+- `bruno/LEIA-ME.md`
+
+## Status do projeto
+
+> 🟢 **Em evolução** — Automação Web e API organizada por domínio, com execução BDD, banco de dados local e geração de evidências.

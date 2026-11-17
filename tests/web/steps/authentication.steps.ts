@@ -51,7 +51,7 @@ When('o usuário permanece sem realizar nenhuma atividade', async ({ authenticat
   await authenticationPage.simularPeriodoInativo();
 });
 
-When('o tempo limite de dez minutos da sessão é atingido', async ({ authenticationPage }) => {
+When('o tempo limite de vinte minutos da sessão é atingido', async ({ authenticationPage }) => {
   await authenticationPage.atingirTempoLimiteSessao();
 });
 

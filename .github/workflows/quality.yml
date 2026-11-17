@@ -87,7 +87,7 @@ jobs:
       JWT_REFRESH_SECRET: github-actions-refresh-secret-with-at-least-32-characters
       ACCESS_TOKEN_TTL_SECONDS: 900
       REFRESH_TOKEN_TTL_DAYS: 7
-      SESSION_IDLE_TIMEOUT_SECONDS: 600
+      SESSION_IDLE_TIMEOUT_SECONDS: 1200
       WEB_ORIGIN: http://localhost:3100
       UPLOAD_DIR: uploads
       API_BASE_URL: http://localhost:3030/api

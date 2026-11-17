@@ -11,7 +11,7 @@ export function validarLoginComSucesso(corpoResposta: unknown, status: number): 
       expiresIn: 900,
 
       session: {
-        idleTimeoutSeconds: 600,
+        idleTimeoutSeconds: 1200,
         refreshTokenExpiresInDays: 7,
       },
 

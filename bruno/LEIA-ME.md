@@ -23,5 +23,5 @@ Use **system / Restaurar massas de demonstração** antes de uma rodada manual c
 - limpeza em fixture ou hook, mesmo quando um teste falhar;
 - renovação e expiração do token;
 - bloqueio de rotas protegidas sem Bearer token;
-- timeout Web de 600 segundos (10 minutos) sem interação;
+- timeout Web de 1200 segundos (20 minutos) sem interação;
 - correlação de falhas usando o header `x-request-id`.
