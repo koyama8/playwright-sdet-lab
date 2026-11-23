@@ -163,7 +163,7 @@ jobs:
 
       - name: Montar a página de evidências
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: node scripts/build-report-site.mjs
+        run: node scripts/publish-playwright-report.mjs
 
       - name: Configurar GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

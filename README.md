@@ -1,6 +1,6 @@
 # Playwright SDET Lab
 
-[![Relatório](https://img.shields.io/badge/RELAT%C3%93RIO-PLAYWRIGHT-45BA4B?style=for-the-badge&logo=playwright&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=report)
+[![Relatório](https://img.shields.io/badge/RELAT%C3%93RIO-PLAYWRIGHT-45BA4B?style=for-the-badge&logo=playwright&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/)
 [![Playwright](https://img.shields.io/badge/PLAYWRIGHT-1.63-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![TypeScript](https://img.shields.io/badge/TYPESCRIPT-TIPADO-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![BDD](https://img.shields.io/badge/BDD-PLAYWRIGHT--BDD-23D96C?style=for-the-badge)](https://vitalets.github.io/playwright-bdd/)
@@ -104,8 +104,7 @@ playwright-sdet-lab/
 ├── bruno/                             # Coleção de requisições da API
 ├── docs/                              # Documentação técnica
 ├── infra/                             # Configurações de infraestrutura
-├── report-site/                       # Portal de evidências
-├── scripts/                           # Scripts auxiliares
+├── scripts/                           # Publicação do relatório Playwright
 ├── docker-compose.yml
 ├── playwright.config.ts
 ├── package.json
