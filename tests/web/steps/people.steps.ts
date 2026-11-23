@@ -18,3 +18,13 @@ When('o usuário busca pela pessoa {string}', async ({ peoplePage }, nomePessoa:
 Then('deve visualizar somente a pessoa {string} nos resultados', async ({ peoplePage }, nomePessoa: string) => {
   await peoplePage.validarResultadoBusca(nomePessoa);
 });
+
+When('o usuário filtra as pessoas pelo status {string}', async ({ peoplePage }, status: string) => {
+  await peoplePage.filtrarPessoasPorStatus(status);
+});
+
+Then('deve visualizar somente pessoas com o status {string}', async ({ peoplePage }, status: string) => {
+  await peoplePage.validarPessoasComStatus(status);
+});
+
+

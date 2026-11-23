@@ -16,3 +16,17 @@ Feature: Pessoas Web
         And o usuário acessa a página de pessoas
         When o usuário busca pela pessoa "Elisa Rocha"
         Then deve visualizar somente a pessoa "Elisa Rocha" nos resultados
+
+    @CT_WEB_PEOPLE_003 @regression @positive
+    Scenario: CT-WEB-PEOPLE-003 - Filtrar pessoas pelo status ativo
+        Given que o usuário está autenticado no sistema
+        And o usuário acessa a página de pessoas
+        When o usuário filtra as pessoas pelo status "Ativos"
+        Then deve visualizar somente pessoas com o status "Ativo"
+
+    @CT_WEB_PEOPLE_004 @regression @positive
+    Scenario: CT-WEB-PEOPLE-004 - Filtrar pessoas pelo status inativo
+        Given que o usuário está autenticado no sistema
+        And o usuário acessa a página de pessoas
+        When o usuário filtra as pessoas pelo status "Inativos"
+        Then deve visualizar somente pessoas com o status "Inativo"

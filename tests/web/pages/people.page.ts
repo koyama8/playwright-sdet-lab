@@ -33,4 +33,44 @@ export class PeoplePage {
     await expect(pessoa).toHaveCount(1);
     await expect(pessoa).toContainText(nomePessoa);
   }
+
+  async filtrarPessoasPorStatus(status: string): Promise<void> {
+    const filtroStatus = this.page.getByTestId('people-status-filter');
+
+    await filtroStatus.selectOption({ label: status });
+  }
+
+  async validarPessoasComStatus(status: string): Promise<void> {
+    const pessoas = this.page.locator('[data-testid^="person-row-"]');
+
+    await expect(pessoas.first()).toBeVisible();
+
+    const quantidadePessoas = await pessoas.count();
+
+    expect(quantidadePessoas).toBeGreaterThan(0);
+
+    for (let indice = 0; indice < quantidadePessoas; indice++) {
+      await expect(pessoas.nth(indice)).toContainText(status);
+    }
+  }
+
+  async filtrarPessoasPorstatusInativo(status: string): Promise<void> {
+    const filtroStatus = this.page.getByTestId('people-status-filter');
+
+    await filtroStatus.selectOption({ label: status });
+  }
+
+  async validarPessoasComStatusInativo(status: string): Promise<void> {
+    const pessoas = this.page.locator('[data-testid^="person-row-"]');
+
+    await expect(pessoas.first()).toBeVisible();
+
+    const quantidadePessoas = await pessoas.count();
+
+    expect(quantidadePessoas).toBeGreaterThan(0);
+
+    for (let indice = 0; indice < quantidadePessoas; indice++) {
+      await expect(pessoas.nth(indice)).toContainText(status);
+    }
+  }
 }
