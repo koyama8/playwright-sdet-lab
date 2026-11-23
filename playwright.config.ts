@@ -32,7 +32,6 @@ export default defineConfig({
     launchOptions: { slowMo },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: process.env.CI ? 'on' : 'retain-on-failure',
   },
   projects: [
     {

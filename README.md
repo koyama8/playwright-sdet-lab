@@ -1,7 +1,6 @@
 # Playwright SDET Lab
 
 [![Relatório](https://img.shields.io/badge/RELAT%C3%93RIO-PLAYWRIGHT-45BA4B?style=for-the-badge&logo=playwright&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=report)
-[![Vídeos](https://img.shields.io/badge/V%C3%8DDEOS-AUTOMA%C3%87%C3%83O-8B5CF6?style=for-the-badge&logo=youtube&logoColor=white)](https://koyama8.github.io/playwright-sdet-lab/?tab=videos-web)
 [![Playwright](https://img.shields.io/badge/PLAYWRIGHT-1.63-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![TypeScript](https://img.shields.io/badge/TYPESCRIPT-TIPADO-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![BDD](https://img.shields.io/badge/BDD-PLAYWRIGHT--BDD-23D96C?style=for-the-badge)](https://vitalets.github.io/playwright-bdd/)
@@ -292,13 +291,12 @@ npm run test:e2e:report
 O Playwright pode gerar:
 
 - relatório HTML;
-- vídeos das execuções;
 - screenshots em falhas;
 - traces para investigação;
 - resultados em JSON;
 - logs da API.
 
-Os badges no início deste README fornecem acesso ao relatório publicado e à galeria de vídeos da automação.
+O badge no início deste README fornece acesso ao relatório publicado da automação.
 
 ## Princípios adotados
 

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Relatórios e vídeos da suíte Playwright SDET Lab" />
+    <meta name="description" content="Relatório e evidências da suíte Playwright SDET Lab" />
     <title>Playwright SDET Lab | Evidências</title>
-    <link rel="stylesheet" href="./styles.css?v=2" />
+    <link rel="stylesheet" href="./styles.css?v=3" />
   </head>
   <body>
     <header class="hero">
@@ -21,12 +21,6 @@
     </header>
 
     <main class="shell">
-      <nav class="tabs" aria-label="Evidências da automação">
-        <button class="tab" type="button" data-tab="report">Relatório Playwright</button>
-        <button class="tab" type="button" data-tab="videos-web">Vídeos Web</button>
-        <button class="tab" type="button" data-tab="videos-api">Vídeos API</button>
-      </nav>
-
       <section class="panel" data-panel="report">
         <div class="panel__heading">
           <div>
@@ -37,39 +31,8 @@
         </div>
         <iframe class="report-frame" src="./report/index.html" title="Relatório HTML do Playwright"></iframe>
       </section>
-
-      <section class="panel" data-panel="videos" hidden>
-        <div class="panel__heading">
-          <div>
-            <p class="eyebrow">EVIDÊNCIAS VISUAIS</p>
-            <h2 id="video-heading">Vídeos Web</h2>
-          </div>
-          <span class="video-count" id="video-count">Carregando...</span>
-        </div>
-
-        <div class="folder-grid" id="folder-grid" aria-live="polite"></div>
-
-        <section class="journey-view" id="journey-view" hidden>
-          <button class="back-button" id="back-to-folders" type="button">
-            <span aria-hidden="true">←</span>
-            Voltar às jornadas
-          </button>
-
-          <div class="journey-heading">
-            <div>
-              <p class="eyebrow">JORNADA DE TESTES</p>
-              <h3 id="journey-title"></h3>
-            </div>
-            <span class="video-count" id="journey-video-count"></span>
-          </div>
-
-          <div class="video-grid" id="video-grid" aria-live="polite"></div>
-        </section>
-      </section>
     </main>
 
     <footer>Engenharia de Automação · Playwright SDET</footer>
-
-    <script src="./app.js?v=2" defer></script>
   </body>
 </html>
