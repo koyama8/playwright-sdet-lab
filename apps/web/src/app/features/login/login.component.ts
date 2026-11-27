@@ -7,6 +7,7 @@ import { AuthService } from '../../core/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule],
+  styleUrl: './login.component.css',
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnDestroy {

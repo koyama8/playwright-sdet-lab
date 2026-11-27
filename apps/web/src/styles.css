@@ -155,8 +155,8 @@ textarea:focus {
   align-items: start;
   gap: 12px;
   width: min(430px, calc(100vw - 32px));
-  border: 1px solid rgba(255, 187, 51, 0.42);
-  border-left: 4px solid var(--yellow);
+  border: 1px solid rgba(255, 89, 77, 0.55);
+  border-left: 4px solid var(--coral);
   border-radius: 9px;
   padding: 14px 12px 14px 14px;
   background: #121a22;
@@ -172,8 +172,8 @@ textarea:focus {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(255, 189, 69, 0.14);
-  color: var(--yellow);
+  background: rgba(255, 89, 77, 0.18);
+  color: var(--coral);
   font-size: 18px;
   font-weight: 900;
 }

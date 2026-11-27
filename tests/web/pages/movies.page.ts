@@ -9,9 +9,7 @@ export class MoviesPage {
   }
 
   async validarPrimeiroFilmeVisivel(): Promise<void> {
-    const filmeVingadores = this.page
-      .locator('[data-testid^="movie-card-"]')
-      .filter({ hasText: 'Vingadores: Ultimato' });
+    const filmeVingadores = this.page.locator('[data-testid^="movie-card-"]').filter({ hasText: 'Vingadores: Ultimato' });
 
     await expect(filmeVingadores).toBeVisible();
     await expect(filmeVingadores).toContainText('2019 · Ação');
@@ -42,5 +40,31 @@ export class MoviesPage {
     const filmeCadastrado = this.page.locator('[data-testid^="movie-card-"]').filter({ hasText: titulo });
 
     await expect(filmeCadastrado).toBeVisible();
+  }
+
+  async validarTituloFilme(): Promise<void> {
+    const filmeCadastrado = this.page.locator('[data-testid^="movie-card-"]').filter({ hasText: 'Interestelar' });
+
+    await expect(filmeCadastrado).toBeVisible();
+  }
+
+  async clicarEditarFilme(): Promise<void> {
+    await this.page.locator('[data-testid="edit-movie-e2e4fc6d-eec9-4650-99e9-1d69f181c7b3"]').click();
+  }
+
+  async editarFilme(): Promise<void> {
+    await this.page.getByTestId('movie-title').fill('Interestelar - Edição Especial');
+  }
+
+  async salvarFilmeEditado(): Promise<void> {
+    await this.page.getByRole('button', { name: ' Salvar filme ' }).click();
+  }
+
+  async visualizarFilme(): Promise<void> {
+    const filmeAtualizado = this.page
+      .locator('[data-testid="movie-card-e2e4fc6d-eec9-4650-99e9-1d69f181c7b3"]')
+      .filter({ hasText: 'Interestelar - Edição Especial' });
+
+    await expect(filmeAtualizado).toBeVisible();
   }
 }
