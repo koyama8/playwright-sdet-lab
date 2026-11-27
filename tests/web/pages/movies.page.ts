@@ -4,6 +4,14 @@ import { type MovieTestData } from '../data/factories/movies.factory';
 export class MoviesPage {
   constructor(readonly page: Page) {}
 
+  private filmeEmEdicao?: { testId: string; tituloOriginal: string };
+
+  private cartaoDoFilme(titulo: string) {
+    return this.page.getByRole('article').filter({
+      has: this.page.getByRole('heading', { name: titulo, exact: true }),
+    });
+  }
+
   async acessarPaginaFilmes(): Promise<void> {
     await this.page.goto('/filmes');
   }
@@ -42,29 +50,38 @@ export class MoviesPage {
     await expect(filmeCadastrado).toBeVisible();
   }
 
-  async validarTituloFilme(): Promise<void> {
-    const filmeCadastrado = this.page.locator('[data-testid^="movie-card-"]').filter({ hasText: 'Interestelar' });
-
-    await expect(filmeCadastrado).toBeVisible();
+  async validarTituloFilme(titulo: string): Promise<void> {
+    await expect(this.cartaoDoFilme(titulo)).toBeVisible();
   }
 
-  async clicarEditarFilme(): Promise<void> {
-    await this.page.locator('[data-testid="edit-movie-e2e4fc6d-eec9-4650-99e9-1d69f181c7b3"]').click();
+  async clicarEditarFilme(titulo: string): Promise<void> {
+    const cartao = this.cartaoDoFilme(titulo);
+    const testId = await cartao.getAttribute('data-testid');
+    if (!testId) throw new Error('Cartão do filme sem identificador.');
+
+    this.filmeEmEdicao = { testId, tituloOriginal: titulo };
+    await cartao.getByRole('button', { name: 'Editar', exact: true }).click();
   }
 
-  async editarFilme(): Promise<void> {
-    await this.page.getByTestId('movie-title').fill('Interestelar - Edição Especial');
+  async editarTitulo(titulo: string): Promise<void> {
+    await this.page.getByTestId('movie-title').fill(titulo);
   }
 
-  async salvarFilmeEditado(): Promise<void> {
-    await this.page.getByRole('button', { name: ' Salvar filme ' }).click();
+  async recarregarCatalogo(): Promise<void> {
+    await expect(this.page.getByTestId('movie-dialog')).toBeHidden();
+    await this.page.reload();
   }
 
-  async visualizarFilme(): Promise<void> {
-    const filmeAtualizado = this.page
-      .locator('[data-testid="movie-card-e2e4fc6d-eec9-4650-99e9-1d69f181c7b3"]')
-      .filter({ hasText: 'Interestelar - Edição Especial' });
-
-    await expect(filmeAtualizado).toBeVisible();
+  async restaurarTituloOriginal(): Promise<void> {
+    if (!this.filmeEmEdicao) return;
+    const { testId, tituloOriginal } = this.filmeEmEdicao;
+    await this.acessarPaginaFilmes();
+    const cartao = this.page.getByTestId(testId);
+    const tituloAtual = await cartao.getByRole('heading').innerText();
+    if (tituloAtual === tituloOriginal) return;
+    await cartao.getByRole('button', { name: 'Editar', exact: true }).click();
+    await this.editarTitulo(tituloOriginal);
+    await this.salvarFilme();
+    await expect(cartao.getByRole('heading')).toHaveText(tituloOriginal);
   }
 }

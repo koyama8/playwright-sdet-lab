@@ -27,4 +27,5 @@ Feature: Filmes Web
         When clica em "Editar" no filme "Interestelar"
         And altera o título para "Interestelar - Edição Especial"
         And clica no botão "Salvar filme"
+        And recarrega a página de filmes
         Then deve visualizar o filme com o título exato "Interestelar - Edição Especial"

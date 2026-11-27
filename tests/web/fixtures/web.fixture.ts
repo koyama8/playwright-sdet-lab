@@ -20,7 +20,12 @@ export const test = base.extend<WebFixtures>({
     await use(new AuthenticationPage(page));
   },
   moviesPage: async ({ page }, use) => {
-    await use(new MoviesPage(page));
+    const moviesPage = new MoviesPage(page);
+    try {
+      await use(moviesPage);
+    } finally {
+      await moviesPage.restaurarTituloOriginal();
+    }
   },
   peoplePage: async ({ page }, use) => {
     await use(new PeoplePage(page));

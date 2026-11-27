@@ -38,22 +38,26 @@ Then('o usuário deve visualizar o novo filme na listagem', async ({ moviesPage,
   await moviesPage.validarFilmeCadastrado(filme.title);
 });
 
-Given('o filme "Interestelar" está cadastrado no catálogo', async ({ moviesPage }) => {
-  await moviesPage.validarTituloFilme();
+Given('o filme {string} está cadastrado no catálogo', async ({ moviesPage }, titulo: string) => {
+  await moviesPage.validarTituloFilme(titulo);
 });
 
-When('clica em "Editar" no filme "Interestelar"', async ({ moviesPage }) => {
-  await moviesPage.clicarEditarFilme();
+When('clica em "Editar" no filme {string}', async ({ moviesPage }, titulo: string) => {
+  await moviesPage.clicarEditarFilme(titulo);
 });
 
-When('altera o título para "Interestelar - Edição Especial"', async ({ moviesPage }) => {
-  await moviesPage.editarFilme();
+When('altera o título para {string}', async ({ moviesPage }, titulo: string) => {
+  await moviesPage.editarTitulo(titulo);
 });
 
 When('clica no botão "Salvar filme"', async ({ moviesPage }) => {
-  await moviesPage.salvarFilmeEditado();
+  await moviesPage.salvarFilme();
 });
 
-Then('deve visualizar o filme com o título exato "Interestelar - Edição Especial"', async ({ moviesPage }) => {
-  await moviesPage.visualizarFilme();
+When('recarrega a página de filmes', async ({ moviesPage }) => {
+  await moviesPage.recarregarCatalogo();
+});
+
+Then('deve visualizar o filme com o título exato {string}', async ({ moviesPage }, titulo: string) => {
+  await moviesPage.validarTituloFilme(titulo);
 });
